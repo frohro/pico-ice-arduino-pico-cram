@@ -1,0 +1,21 @@
+# PlatformIO build output
+.pio/
+
+# VS Code local files
+.vscode/ipch/
+.vscode/.browse.VC.db*
+
+# C/C++ tooling caches
+.ccls-cache/
+.clangd/
+
+# Python
+__pycache__/
+*.pyc
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# pico-ice-sdk example
+pico-ice-sdk/

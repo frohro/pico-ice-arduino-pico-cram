@@ -1,0 +1,6634 @@
+iCE40 UltraPlus Family Data Sheet
+
+Data Sheet
+
+FPGA-DS-02008-2.4
+February 2025
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Disclaimers
+Lattice makes no warranty, representation, or guarantee regarding the accuracy of information contained in this document or the suitability of its
+products for any particular purpose. All information herein is provided AS IS, with all faults, and all associated risk is the responsibility entirely of the
+Buyer. The information provided herein is for informational purposes only and may contain technical inaccuracies or omissions, and may be otherwise
+rendered inaccurate for many reasons, and Lattice assumes no obligation to update or otherwise correct or revise this information. Products sold by
+Lattice have been subject to limited testing and it is the Buyer's responsibility to independently determine the suitability of any products and to test
+and verify the same. LATTICE PRODUCTS AND SERVICES ARE NOT DESIGNED, MANUFACTURED, OR TESTED FOR USE IN LIFE OR SAFETY CRITICAL
+SYSTEMS, HAZARDOUS ENVIRONMENTS, OR ANY OTHER ENVIRONMENTS REQUIRING FAIL-SAFE PERFORMANCE, INCLUDING ANY APPLICATION IN
+WHICH THE FAILURE OF THE PRODUCT OR SERVICE COULD LEAD TO DEATH, PERSONAL INJURY, SEVERE PROPERTY DAMAGE OR ENVIRONMENTAL
+HARM (COLLECTIVELY, "HIGH-RISK USES"). FURTHER, BUYER MUST TAKE PRUDENT STEPS TO PROTECT AGAINST PRODUCT AND SERVICE FAILURES,
+INCLUDING PROVIDING APPROPRIATE REDUNDANCIES, FAIL-SAFE FEATURES, AND/OR SHUT-DOWN MECHANISMS. LATTICE EXPRESSLY DISCLAIMS
+ANY EXPRESS OR IMPLIED WARRANTY OF FITNESS OF THE PRODUCTS OR SERVICES FOR HIGH-RISK USES. The information provided in this document
+is proprietary to Lattice Semiconductor, and Lattice reserves the right to make any changes to the information in this document or to any products at
+any time without notice.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+2
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Contents
+Contents ...............................................................................................................................................................3
+Abbreviations in This Document ..........................................................................................................................7
+1. General Description ......................................................................................................................................8
+1.1.
+Features ...............................................................................................................................................8
+2. Product Family ..............................................................................................................................................9
+2.1.
+Overview ..............................................................................................................................................9
+3. Architecture ................................................................................................................................................11
+3.1.
+Architecture Overview .......................................................................................................................11
+3.1.1. PLB Blocks ..................................................................................................................................... 12
+3.1.2. Routing .......................................................................................................................................... 13
+3.1.3. Clock/Control Distribution Network ............................................................................................. 13
+3.1.4. sysCLOCK Phase Locked Loops (PLLs) ........................................................................................... 14
+3.1.5. sysMEM Embedded Block RAM Memory ..................................................................................... 15
+3.1.6. sysMEM Single Port RAM Memory (SPRAM) ................................................................................ 17
+3.1.7. sysDSP ........................................................................................................................................... 18
+3.1.8. sysI/O Buffer Banks ....................................................................................................................... 23
+3.1.9. sysI/O Buffer ................................................................................................................................. 26
+3.1.10. On-Chip Oscillator ......................................................................................................................... 26
+3.1.11. User I2C IP ..................................................................................................................................... 27
+3.1.12. User SPI IP ..................................................................................................................................... 27
+3.1.13. RGB High Current Drive I/O Pins ................................................................................................... 27
+3.1.14. RGB PWM IP .................................................................................................................................. 27
+3.1.15. Non-Volatile Configuration Memory ............................................................................................ 28
+3.2.
+iCE40 UltraPlus Programming and Configuration ..............................................................................28
+3.2.1. Device Programming ..................................................................................................................... 28
+3.2.2. Device Configuration..................................................................................................................... 28
+3.2.3. Power Saving Options ................................................................................................................... 28
+4. DC and Switching Characteristics ...............................................................................................................29
+4.1.
+Absolute Maximum Ratings ...............................................................................................................29
+4.2.
+Recommended Operating Conditions................................................................................................29
+4.3.
+Power Supply Ramp Rates .................................................................................................................30
+4.4.
+Power-On Reset .................................................................................................................................30
+4.5.
+Power-up Supply Sequence ...............................................................................................................30
+4.6.
+External Reset ....................................................................................................................................30
+4.7.
+Power-On-Reset Voltage Levels .........................................................................................................31
+4.8.
+ESD Performance ...............................................................................................................................32
+4.9.
+DC Electrical Characteristics...............................................................................................................32
+4.10. Supply Current ...................................................................................................................................32
+4.11. User I2C Specifications .......................................................................................................................33
+4.12. I2C 50 ns Delay ...................................................................................................................................33
+4.13. I2C 50 ns Filter....................................................................................................................................33
+4.14. User SPI Specifications .......................................................................................................................33
+4.15. Internal Oscillators (HFOSC, LFOSC) ...................................................................................................34
+4.16. sysI/O Recommended Operating Conditions.....................................................................................34
+4.17. sysI/O Single-Ended DC Electrical Characteristics ..............................................................................34
+4.18. Differential Comparator Electrical Characteristics ............................................................................34
+4.19. Typical Building Block Function Performance ....................................................................................35
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+3
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+4.19.1. Pin-to-Pin Performance (LVCMOS25) ........................................................................................... 35
+4.19.2. Register-to-Register Performance ................................................................................................ 35
+4.20. sysDSP Timing ....................................................................................................................................35
+4.21. SPRAM Timing ....................................................................................................................................35
+4.22. Derating Logic Timing.........................................................................................................................36
+4.23. Maximum sysI/O Buffer Performance ...............................................................................................36
+4.24. iCE40 UltraPlus Family Timing Adders ...............................................................................................36
+4.25. iCE40 UltraPlus External Switching Characteristics ...........................................................................37
+4.26. sysCLOCK PLL Timing ..........................................................................................................................37
+4.27. SPI Master or NVCM Configuration Time ..........................................................................................38
+4.28. sysCONFIG Port Timing Specifications ...............................................................................................38
+4.29. RGB LED Drive ....................................................................................................................................39
+4.30. Switching Test Conditions ..................................................................................................................39
+5. Pinout Information .....................................................................................................................................40
+5.1.
+Signal Descriptions .............................................................................................................................40
+5.1.1. Power Supply Pins ......................................................................................................................... 40
+5.1.2. Configuration Pins ......................................................................................................................... 40
+5.1.3. Configuration SPI Pins ................................................................................................................... 40
+5.1.4. Global Pins..................................................................................................................................... 41
+5.1.5. General I/O, LED Pins .................................................................................................................... 42
+5.2.
+Pin Information Summary ..................................................................................................................42
+5.3.
+iCE40UP Part Number Description.....................................................................................................43
+5.3.1. Tape and Reel Quantity................................................................................................................. 43
+5.4.
+Ordering Part Numbers ......................................................................................................................43
+5.4.1. Industrial ....................................................................................................................................... 43
+Supplemental Information .................................................................................................................................44
+Technical Support Assistance.............................................................................................................................45
+Revision History .................................................................................................................................................46
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+4
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Figures
+Figure 3.1. iCE40UP5K Device, Top View ............................................................................................................................ 11
+Figure 3.2. PLB Block Diagram ............................................................................................................................................ 12
+Figure 3.3. PLL Diagram ...................................................................................................................................................... 14
+Figure 3.4. sysMEM Memory Primitives ............................................................................................................................. 16
+Figure 3.5. SPRAM Primitive ............................................................................................................................................... 17
+Figure 3.6. sysDSP Functional Block Diagram (16-bit x 16-bit Multiply-Accumulate) ........................................................ 19
+Figure 3.7. sysDSP 8-bit x 8-bit Multiplier........................................................................................................................... 22
+Figure 3.8. DSP 16-bit x 16-bit Multiplier ........................................................................................................................... 23
+Figure 3.9. I/O Bank and Programmable I/O Cell ............................................................................................................... 24
+Figure 3.10. iCE I/O Register Block Diagram ....................................................................................................................... 25
+Figure 4.1. Power Up Sequence with SPE_VCCIO1 and VPP_2V5 Not Connected Together .............................................. 31
+Figure 4.2. Power Up Sequence with All Supplies Connected Together to 1.8 V ............................................................... 31
+Figure 4.3. Output Test Load, LVCMOS Standards ............................................................................................................. 39
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+5
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Tables
+Table 2.1. iCE40 UltraPlus Family Selection Guide ............................................................................................................... 9
+Table 3.1. Logic Cell Signal Descriptions ............................................................................................................................. 13
+Table 3.2. Global Buffer (GBUF) Connections to Programmable Logic Blocks ................................................................... 13
+Table 3.3. PLL Signal Descriptions ....................................................................................................................................... 15
+Table 3.4. sysMEM Block Configurations ............................................................................................................................ 15
+Table 3.5. EBR Signal Descriptions ...................................................................................................................................... 16
+Table 3.6. SPRAM Signal Descriptions ................................................................................................................................ 18
+Table 3.7. Output Block Port Description ........................................................................................................................... 19
+Table 3.8. PIO Signal List ..................................................................................................................................................... 25
+Table 3.9. Supported Input Standards ................................................................................................................................ 26
+Table 3.10. Supported Output Standards ........................................................................................................................... 26
+Table 3.11. iCE40 UltraPlus Power Saving Features Description ........................................................................................ 28
+Table 4.1. Absolute Maximum Ratings ............................................................................................................................... 29
+Table 4.2. Recommended Operating Conditions ................................................................................................................ 29
+Table 4.3. Power Supply Ramp Rates ................................................................................................................................. 30
+Table 4.4. Power-On-Reset Voltage Levels ......................................................................................................................... 31
+Table 4.5. DC Electrical Characteristics ............................................................................................................................... 32
+Table 4.6. Supply Current ................................................................................................................................................... 32
+Table 4.7. User I2C Specifications ....................................................................................................................................... 33
+Table 4.8. I2C 50 ns Delay ................................................................................................................................................... 33
+Table 4.9. I2C 50 ns Filter.................................................................................................................................................... 33
+Table 4.10. User SPI Specifications ..................................................................................................................................... 33
+Table 4.11. Internal Oscillators (HFOSC, LFOSC) ................................................................................................................. 34
+Table 4.12. sysI/O Recommended Operating Conditions ................................................................................................... 34
+Table 4.13. sysI/O Single-Ended DC Electrical Characteristics ............................................................................................ 34
+Table 4.14. Differential Comparator Electrical Characteristics ........................................................................................... 34
+Table 4.15. Pin-to-Pin Performance (LVCMOS25) .............................................................................................................. 35
+Table 4.16. Register-to-Register Performance ................................................................................................................... 35
+Table 4.17. sysDSP Timing .................................................................................................................................................. 35
+Table 4.18. Single Port RAM Timing ................................................................................................................................... 35
+Table 4.19. Maximum sysI/O Buffer Performance ............................................................................................................. 36
+Table 4.20. iCE40 UltraPlus Family Timing Adders ............................................................................................................. 36
+Table 4.21. iCE40 UltraPlus External Switching Characteristics .......................................................................................... 37
+Table 4.22. sysCLOCK PLL Timing ........................................................................................................................................ 37
+Table 4.23. SPI Master or NVCM Configuration Time1, 2 ..................................................................................................... 38
+Table 4.24. sysCONFIG Port Timing Specifications ............................................................................................................. 38
+Table 4.25. RGB LED............................................................................................................................................................ 39
+Table 4.26. Test Fixture Required Components, Non-Terminated Interfaces .................................................................... 39
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+6
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Abbreviations in This Document
+A list of abbreviations used in this document.
+Abbreviation
+DFF
+
+Definition
+D-style Flip-Flop
+
+DSP
+EBR
+
+Digital Signal Processor
+Embedded Block RAM
+
+HFOSC
+I2C
+LFOSC
+
+High Frequency Oscillator
+Inter-Integrated Circuit
+Low Frequency Oscillator
+
+LUT
+LVCMOS
+NVCM
+
+Look Up Table
+Low-Voltage Complementary Metal Oxide Semiconductor
+Non Volatile Configuration Memory
+
+PCLK
+PFU
+
+Primary Clock
+Programmable Functional Unit
+
+PIC
+PLB
+PLL
+
+Programmable I/O Cells
+Programmable Logic Blocks
+Phase Locked Loops
+
+SoC
+SPI
+
+System on a Chip
+Serial Peripheral Interface
+
+SPR
+WLCSP
+
+Single Port RAM
+Wafer Level Chip Scale Packaging
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+7
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+1. General Description
+iCE40 UltraPlus™ family from Lattice Semiconductor is
+an ultra-low power FPGA and sensor manager
+designed for ultra-low power mobile applications, such
+as smartphones, tablets and hand-held devices. iCE40
+UltraPlus is compatible with Lattice iCE40 Ultra family
+devices, containing all the functions the iCE40 Ultra
+family has except the high current IR LED driver. In
+addition, the iCE40 UltraPlus features an additional 1
+Mb SRAM, additional DSP blocks, with additional LUTs,
+all which can be used to support an always-on Voice
+Recognition function in the mobile devices, without
+the need to keep the higher power consuming voice
+codec on all the time.
+The iCE40 UltraPlus family includes integrated SPI and
+I2C blocks to interface with virtually all mobile sensors
+and application processors. In addition, the iCE40
+UltraPlus family also features two I/O pins that can
+support the interface to I3C devices. There are two
+on-chip oscillators, a 10 kHz one and a 48 MHz one, the
+LFOSC (10 kHz) is ideal for low power function in
+always-on applications, while HFOSC (48 MHz) can be
+used for awaken activities.
+The iCE40 UltraPlus family also features the DSP
+functional block to off-load Application Processor to
+pre-process information sent from the mobile device,
+such as voice data. The RGB PWM IP, with the three
+24 mA constant current RGB outputs on the iCE40
+UltraPlus provides all the necessary logic to directly
+drive the service LED, without the need of external
+MOSFET or buffer.
+The iCE40 UltraPlus family of devices are targeting for
+mobile applications to perform all the functions in
+iCE40 Ultra devices, such as Service LED, GPIO
+Expander, SDIO Level Shift, and other custom
+functions. In addition, the iCE40 UltraPlus family
+devices are also targeting for Voice Recognition
+application.
+The iCE40 UltraPlus family features two device
+densities, 2,800 to 5,280 Look Up Tables (LUTs) of logic
+with programmable I/Os that can be used as either
+SPI/I2C interface ports or general purpose I/Os. Two of
+the iCE40 UltraPlus I/Os can be used to interface to
+higher performance I3C. It also has up to 120 kb of
+Block RAMs, plus 1,024 kb of Single Port SRAMs to
+work with user logic.
+
+1.1. Features
+•
+
+•
+
+•
+
+•
+•
+•
+
+•
+
+•
+
+•
+
+•
+
+•
+•
+
+Flexible Logic Architecture
+• Two devices with 2,800 to 5,280 LUTs
+• Offered in WLCS and QFN packages
+Ultra-low Power Devices
+• Advanced 40 nm low power process
+• As low as 100 µA standby current typical
+Embedded Memory
+• Up to 1,024 kb Single Port SRAM
+• Up to 120 kb sysMEM™ Embedded Block RAM
+Two Hardened I2C Interfaces
+• Two I/O pins to support I3C interface
+Two Hardened SPI Interfaces
+Two On-Chip Oscillators
+• Low Frequency Oscillator – 10 kHz
+• High Frequency Oscillator – 48 MHz
+24 mA Current Drive RGB LED Outputs
+• Three drive outputs in each device
+• User selectable sink current up to 24 mA
+On-chip DSP
+• Signed and unsigned 8-bit or 16-bit functions
+• Functions include Multiplier, Accumulator, and
+Multiply-Accumulate (MAC)
+Flexible On-Chip Clocking
+• Eight low skew global signal resource, six can
+be directly driven from external pins
+• One PLL with dynamic interface per device
+Flexible Device Configuration
+• SRAM is configured through:
+• Standard SPI Interface
+• Internal Nonvolatile Configuration Memory
+(NVCM)
+Ultra-Small Form Factor
+• As small as 2.11 mm × 2.54 mm
+Applications
+• Always-On Voice Recognition Application
+• Smartphones
+• Tablets and Consumer Handheld Devices
+• Handheld Commercial and Industrial Devices
+• Multi Sensor Management Applications
+• Sensor Pre-processing and Sensor Fusion
+• Always-On Sensor Applications
+• USB 3.1 Type C Cable Detect / Power Delivery
+Applications
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+8
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+2. Product Family
+Table 2.1 lists device information and packages of the iCE40 UltraPlus family.
+Table 2.1. iCE40 UltraPlus Family Selection Guide
+Part Number
+
+iCE40UP3K
+
+iCE40UP5K
+
+Logic Cells (LUT + Flip-Flop)
+
+2,800
+
+5,280
+
+EBR Memory Blocks
+
+20
+
+30
+
+EBR Memory Bits (kbits)
+
+80
+
+120
+
+SPRAM Memory Blocks
+
+4
+
+4
+
+SPRAM Memory Bits (kbits)
+
+1,024
+
+1,024
+
+NVCM
+
+Yes
+
+Yes
+
+PLL
+
+1
+
+1
+
+DSP Blocks (MULT16 with 32-bit Accumulator)
+
+4
+
+8
+
+Hardened I2C, SPI
+
+2, 2
+
+2, 2
+
+HF Oscillator (48 MHz)
+
+1
+
+1
+
+LF Oscillator (10 kHz)
+
+1
+
+1
+
+24 mA LED Sink
+
+3
+
+3
+
+PWM IP Block
+
+Yes
+
+Packages, Ball Pitch, Dimension
+
+Yes
+Total User I/O Count
+
+30-ball WLCSP, 0.4 mm, 2.11 mm × 2.54 mm
+
+21
+
+21
+
+48-ball QFN, 0.5 mm, 7.0 mm × 7.0 mm
+
+—
+
+39
+
+2.1. Overview
+The iCE40 UltraPlus family of ultra-low power FPGAs has three devices with densities ranging from 2,800 to 5,280
+Look-Up Tables (LUTs) fabricated in a 40 nm Low Power CMOS process. In addition to LUT-based, low-cost
+programmable logic, these devices also feature Embedded Block RAM (EBR), Single Port RAM (SPRAM), on-chip
+Oscillators (LFOSC, HFOSC), two hardened I2C Controllers, two hardened SPI Controllers, PWM IP, three 24 mA RGB LED
+open-drain drivers, I3C interface pins, and DSP blocks. These features allow the devices to be used in low-cost,
+high-volume consumer and mobile applications.
+The iCE40 UltraPlus FPGAs are available in very small form factor packages, as small as 2.11 mm × 2.54 mm. The small
+form factor allows the device to easily fit into a lot of mobile applications, where space can be limited. Table 2.1 lists
+the LUT densities, package and I/O pin count.
+The iCE40 UltraPlus devices offer I/O features such as pull-up resistors. Pull-up features are controllable on a “per pin”
+basis. In addition, the iCE40 UltraPlus devices offer two I/Os with dynamic control on the pull-up resistors to support
+I3C interface.
+The RGB PWM IP in the iCE40 UltraPlus devices provides controls for driving the 24 mA LED Sink driver, including color
+controls, LED ON/OFF time, and breathe rate.
+The iCE40 UltraPlus devices also provide flexible, reliable and secure configuration from on-chip NVCM. These devices
+can also configure themselves from external SPI Flash, or be configured by an external master such as a CPU.
+Lattice provides a variety of design tools that allow complex designs to be efficiently implemented using the iCE40
+UltraPlus family of devices. Popular logic synthesis tools provide synthesis library support for iCE40 UltraPlus. Lattice
+design tools use the synthesis tool output along with the user-specified preferences and constraints to place and route
+the design in the iCE40 UltraPlus device. These tools extract the timing from the routing and back-annotate it into the
+design for timing verification.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+9
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Lattice provides many pre-engineered IP (Intellectual Property) modules, including a number of reference designs,
+licensed free of charge, optimized for the iCE40 UltraPlus FPGA family. Lattice also can provide fully verified bitstream
+for some of the widely used target functions in mobile device applications, such as ultra-low power sensor
+management, gesture recognition, IR remote, barcode emulator functions. Users can use these functions as offered by
+Lattice, or they can use the design to create their own unique required functions. For more information regarding
+Lattice reference designs or fully-verified bitstreams, contact your local Lattice representative.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+10
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+3. Architecture
+3.1. Architecture Overview
+The iCE40 UltraPlus family architecture contains an array of Programmable Logic Blocks (PLB), two Oscillator
+Generators, two user configurable I2C controllers, two user configurable SPI controllers, blocks of sysMEM™ Embedded
+Block RAM (EBR) and Single Port RAM (SPRAM) surrounded by Programmable I/O (PIO). Figure 3.1 shows the block
+diagram of the iCE40UP5K device.
+
+DSP
+
+50 ns Filter
+
+NVCM
+
+5 PLB Rows
+
+50 ns Filter
+
+DSP
+
+5 4 Kb DPRAM
+5 4 Kb DPRAM
+5 4 Kb DPRAM
+256 Kb
+SPRAM
+
+50 ns Delay
+50 ns Delay
+
+DSP
+
+5 4 Kb DPRAM
+5 4 Kb DPRAM
+
+LFOSC
+
+5 4 Kb DPRAM
+
+DSP
+DSP
+DSP
+DSP
+
+256 Kb
+SPRAM
+
+I2C
+
+8 Logic Cells = Programmable Logic Block
+
+PLL
+
+HFOSC
+
+256 Kb
+SPRAM
+
+I3C I/O
+I3C I/O
+
+I/O Bank 0
+
+config
+256 Kb
+SPRAM
+
+DSP
+
+PWM IP
+
+I2 C
+
+RGB I/O
+RGB I/O
+RGB I/O
+
+PLB
+
+config
+
+SPI
+
+I/O Bank 2
+
+I/O Bank 1_SPI
+
+SPI
+
+Carry Logic
+4-Input Look-up
+Table (LUT)
+
+Flip-flop with Enableand Reset Controls
+
+Figure 3.1. iCE40UP5K Device, Top View
+The Programmable Logic Blocks (PLB) and sysMEM EBR blocks, are arranged in a two-dimensional grid with rows and
+columns. Each column has either PLB or EBR blocks. The PIO cells are located at the top and bottom of the device,
+arranged in banks. The PLB contains the building blocks for logic, arithmetic, and register functions. The PIOs utilize a
+flexible I/O buffer referred to as a sysI/O buffer that supports operation with a variety of interface standards. The
+blocks are connected with many vertical and horizontal routing channel resources. The place and route software tool
+automatically allocates these routing resources.
+In the iCE40 UltraPlus family, there are three sysI/O banks, one on top and two at the bottom. User can connect some
+VCCIOs together, if all the I/Os are using the same voltage standard. See the Power-up Supply Sequence section. The
+sysMEM EBRs are large 4 kb, dedicated fast memory blocks. These blocks can be configured as RAM, ROM or FIFO with
+user logic using PLBs.
+In addition to the EBR, the iCE40 UltraPlus devices also feature four 256 kb SPRAM blocks that can be cascaded to
+create up to 1 Mb block. It is useful for temporary storage of large quantities of information.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+11
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Every device in the family has two user SPI ports, one of them (on the right side) also supports programming and
+configuration of the device. The iCE40 UltraPlus also includes two user I2C ports, two oscillators, and high current RGB
+LED sink.
+
+3.1.1. PLB Blocks
+The core of the iCE40 UltraPlus device consists of Programmable Logic Blocks (PLB) which can be programmed to
+perform logic and arithmetic functions. Each PLB consists of eight interconnected Logic Cells (LC), as shown in
+Figure 3.2. Each LC contains one LUT and one register.
+Shared Block-Level Controls
+Clock
+
+Programmable
+Logic Block (PLB)
+
+Enable
+FCOUT
+
+1
+
+Set/Reset
+0
+
+Logic Cell
+
+Carry Logic
+
+8 Logic Cells (LCs)
+
+DFF
+I0
+
+D
+
+I1
+
+EN
+
+LUT
+
+I2
+
+O
+Q
+
+SR
+
+I3
+
+FCIN
+
+Four-input
+Look-Up Table
+(LUT)
+
+Flip-flop with
+optional enable and
+set or reset controls
+
+= Statically defined by configuration program
+
+Figure 3.2. PLB Block Diagram
+Logic Cells
+Each Logic Cell includes three primary logic elements shown in Figure 3.2.
+• A four-input Look-Up Table (LUT) builds any combinational logic function, of any complexity, requiring up to four
+inputs. Similarly, the LUT element behaves as a 16x1 Read-Only Memory (ROM). Combine and cascade multiple
+LUTs to create wider logic functions.
+• A ‘D’-style Flip-Flop (DFF), with an optional clock-enable and reset control input, builds sequential logic functions.
+Each DFF also connects to a global reset signal that is automatically and immediately asserted following device
+configuration.
+• Carry Logic boosts the logic efficiency and performance of arithmetic functions, including adders, subtracters,
+comparators, binary counters and some wide, cascaded logic functions.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+12
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Table 3.1 lists the logic cell signals.
+Table 3.1. Logic Cell Signal Descriptions
+Function
+Input
+
+Type
+Data signal
+
+Signal Name
+I0, I1, I2, I3
+
+Description
+Inputs to LUT
+
+Input
+Input
+
+Control signal
+Control signal
+
+Enable
+Set/Reset1
+
+Input
+
+Control signal
+
+Clock
+
+Clock enable shared by all LCs in the PLB.
+Asynchronous or synchronous local set/reset shared by
+all LCs in the PLB.
+Clock one of the eight Global Buffers, or from the
+general-purpose interconnects fabric shared by all LCs
+in the PLB.
+
+Input
+Output
+Output
+
+Inter-PLB signal
+Data signals
+Inter-PFU signal
+
+FCIN
+O
+FCOUT
+
+Fast carry in
+LUT or registered output
+Fast carry out
+
+Note:
+
+1.
+
+If Set/Reset is not used, then the flip-flop is never set/reset, except when cleared immediately after configuration.
+
+3.1.2. Routing
+There are many resources provided in the iCE40 UltraPlus devices to route signals individually with related control
+signals. The routing resources consist of switching circuitry, buffers and metal interconnect (routing) segments.
+The inter-PLB connections are made with three different types of routing resources: Adjacent (spans two PLBs), x4
+(spans five PLBs) and x12 (spans thirteen PLBs). The Adjacent, x4 and x12 connections provide fast and efficient
+connections in the diagonal, horizontal and vertical directions.
+The design tool takes the output of the synthesis tool and places and routes the design.
+
+3.1.3. Clock/Control Distribution Network
+Each iCE40 UltraPlus device has six global inputs, two pins on the top bank and four pins on the bottom bank.
+These global inputs can be used as high fanout nets, clock, reset or enable signals. The dedicated global pins are
+identified as Gxx and each drives one of the eight global buffers. The global buffers are identified as GBUF[7:0]. These
+six inputs may be used as general purpose I/O if they are not used to drive the clock nets.
+Table 3.2 lists the connections between a specific global buffer and the inputs on a PLB. All global buffers optionally
+connect to the PLB CLK input. Any four of the eight global buffers can drive logic inputs to a PLB. Even-numbered global
+buffers optionally drive the Set/Reset input to a PLB. Similarly, odd-numbered buffers optionally drive the PLB
+clock-enable input. GBUF[7:6, 3:0] can connect directly to G[7:6, 3:0] pins respectively. GBUF4 and GBUF5 can connect
+to the two on-chip Oscillator Generators (GBUF4 connects to LFOSC, GBUF5 connects to HFOSC).
+Table 3.2. Global Buffer (GBUF) Connections to Programmable Logic Blocks
+Global Buffer
+
+Clock
+
+Reset
+
+Clock Enable
+
+GBUF0
+
+✓
+
+✓
+
+—
+
+GBUF1
+
+✓
+
+—
+
+✓
+
+GBUF2
+
+✓
+
+✓
+
+—
+
+✓
+
+—
+
+✓
+
+✓
+
+✓
+
+—
+
+GBUF5
+
+✓
+
+—
+
+✓
+
+GBUF6
+
+✓
+
+✓
+
+—
+
+GBUF7
+
+✓
+
+—
+
+✓
+
+GBUF3
+GBUF4
+
+LUT Inputs
+
+Yes, any 4 of 8 GBUF
+Inputs
+
+The maximum frequency for the global buffers are listed in Table 4.21.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+13
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Global Hi-Z Control
+The global high-impedance control signal, GHIZ, connects to all I/O pins on the iCE40 UltraPlus device. This GHIZ signal
+is automatically asserted throughout the configuration process, forcing all user I/O pins into their high-impedance
+state.
+Global Reset Control
+The global reset control signal connects to all PLB and PIO flip-flops on the iCE40 UltraPlus device. The global reset
+signal is automatically asserted throughout the configuration process, forcing all flip-flops to their defined wake-up
+state. For PLB flip-flops, the wake-up state is always reset, regardless of the PLB flip-flop primitive used in the
+application.
+
+3.1.4. sysCLOCK Phase Locked Loops (PLLs)
+The sysCLOCK PLLs provide the ability to synthesize clock frequencies. The iCE40 UltraPlus devices have one sysCLOCK
+PLL. REFERENCECLK is the reference frequency input to the PLL and its source can come from an external I/O pin, the
+internal Oscillator Generators from internal routing. EXTFEEDBACK is the feedback signal to the PLL which can come
+from internal routing or an external I/O pin. The feedback divider is used to multiply the reference frequency and thus
+synthesize a higher frequency clock output.
+The PLLOUT output has an output divider, thus allowing the PLL to generate different frequencies for each output. The
+output divider can have a value from 1 to 64 (in increments of 2X). The PLLOUT outputs can all be used to drive the
+iCE40 UltraPlus global clock network directly or general purpose routing resources can be used.
+The LOCK signal is asserted when the PLL determines it has achieved lock and de-asserted if a loss of lock is detected. A
+block diagram of the PLL is shown in Figure 3.3.
+The timing of the device registers can be optimized by programming a phase shift into the PLLOUT output clock which
+advances or delays the output clock with reference to the REFERENCECLK clock. This phase shift can be either
+programmed during configuration or can be adjusted dynamically. In dynamic mode, the PLL may lose lock after a phase
+adjustment on the output used as the feedback source and not relock until the tLOCK parameter has been satisfied.
+For more details, refer to iCE40 sysCLOCK PLL Design and Usage Guide (FPGA-TN-02052).
+RESET
+BYPAS S
+
+BYPAS S
+GNDPLL
+
+REFERENCECLK
+
+DIVR
+
+Phase
+Detector
+
+In put
+Divider
+
+RANGE
+
+VCCPLL
+
+DIVQ
+
+Vol tage
+Control led
+Oscill ator
+(VCO)
+
+Lo w-Pass
+Filter
+
+VCO
+Divider
+
+SIMPLE
+DIVF
+
+PLLOUTCORE
+
+Feed back
+Divider
+
+Fine Delay
+Adjustment
+Feed back
+
+Feed back_Path
+
+PLLOUTGLOBAL
+
+LOCK
+
+DYNAMICDELAY[7:0]
+EXTFEEDBACK
+
+LATCHINPUTVALUE
+
+Phase
+Shifter
+
+Fine Delay
+Adjustment
+Output Port
+
+EXTERNAL
+Lo w Power Mode
+(iCEgate enabled)
+
+Figure 3.3. PLL Diagram
+Table 3.3 provides signal descriptions of the PLL block.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+14
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Table 3.3. PLL Signal Descriptions
+Signal Name
+
+Direction
+
+Description
+
+REFERENCECLK
+
+Input
+
+BYPASS
+
+Input
+
+EXTFEEDBACK
+
+Input
+
+DYNAMICDELAY[7:0]
+
+Input
+
+LATCHINPUTVALUE
+
+Input
+
+PLLOUTGLOBAL
+
+Output
+
+PLLOUTCORE
+
+Output
+
+LOCK
+
+Output
+
+RESET
+
+Input
+
+Input reference clock.
+The BYPASS control selects which clock signal connects to the PLLOUT output.
+0 – PLL generated signal
+1 – REFERENCECLK
+External feedback input to PLL. Enabled when the FEEDBACK_PATH attribute is set
+to EXTERNAL.
+Fine delay adjustment control inputs. Enabled when DELAY_ADJUSTMENT_MODE
+is set to DYNAMIC.
+When enabled, puts the PLL into low-power mode; PLL output is held static at the
+last input clock value. Set ENABLE ICEGATE_PORTA and PORTB to ‘1’ to enable.
+Output from the Phase-Locked Loop (PLL). Drives a global clock network on the
+FPGA. The port has optimal connections to global clock buffers GBUF4 and GBUF5.
+Output clock generated by the PLL, drives regular FPGA routing. The frequency
+generated on this output is the same as the frequency of the clock signal generated
+on the PLLOUTLGOBAL port.
+When High, indicates that the PLL output is phase aligned or locked to the input
+reference clock.
+Active low reset.
+
+SCLK
+SDI
+
+Input
+Input
+
+Input, Serial Clock used for re-programming PLL settings.
+Input, Serial Data used for re-programming PLL settings.
+
+3.1.5. sysMEM Embedded Block RAM Memory
+Larger iCE40 UltraPlus device includes multiple high-speed synchronous sysMEM Embedded Block RAMs (EBRs), each
+4 kbit in size. This memory can be used for a wide variety of purposes including data buffering and FIFO.
+sysMEM Memory Block
+The sysMEM block can implement single port, pseudo dual port, or FIFO memories with programmable logic resources.
+Each block can be used in a variety of depths and widths as listed in Table 3.4.
+Table 3.4. sysMEM Block Configurations
+Block RAM
+Configuration
+SB_RAM256x16
+SB_RAM256x16NR
+SB_RAM256x16NW
+SB_RAM256x16NRNW
+SB_RAM512x8
+SB_RAM512x8NR
+SB_RAM512x8NW
+SB_RAM512x8NRNW
+SB_RAM1024x4
+SB_RAM1024x4NR
+SB_RAM1024x4NW
+SB_RAM1024x4NRNW
+SB_RAM2048x2
+SB_RAM2048x2NR
+SB_RAM2048x2NW
+SB_RAM2048x2NRNW
+
+Block RAM
+Configuration
+and Size
+
+WADDR Port
+Size (Bits)
+
+WDATA Port
+Size (Bits)
+
+RADDR Port
+Size (Bits)
+
+RDATA Port
+Size (Bits)
+
+MASK Port
+Size (Bits)
+
+256x16 (4 k)
+
+8 [7:0]
+
+16 [15:0]
+
+8 [7:0]
+
+16 [15:0]
+
+16 [15:0]
+
+512x8 (4 k)
+
+9 [8:0]
+
+8 [7:0]
+
+9 [8:0]
+
+8 [7:0]
+
+No Mask Port
+
+1024x4 (4 k)
+
+10 [9:0]
+
+4 [3:0]
+
+10 [9:0]
+
+4 [3:0]
+
+No Mask Port
+
+2048x2 (4 k)
+
+11 [10:0]
+
+2 [1:0]
+
+11 [10:0]
+
+2 [1:0]
+
+No Mask Port
+
+Note: For iCE40 UltraPlus, the primitive name without “Nxx” uses rising-edge Read and Write clocks. “NR” uses rising-edge Write
+clock and falling-edge Read clock. “NW” uses falling-edge Write clock and rising-edge Read clock. “NRNW” uses failing-edge clocks
+on both Read and Write.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+15
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+RAM Initialization and ROM Operation
+If desired, the contents of the RAM can be pre-loaded during device configuration.
+By preloading the RAM block during the chip configuration cycle and disabling the write controls, the sysMEM block
+can also be utilized as a ROM.
+Memory Cascading
+Larger and deeper blocks of RAM can be created using multiple EBR sysMEM Blocks.
+RAM4k Block
+Figure 3.4 shows the 256x16 memory configurations and their input/output names. In all the sysMEM RAM modes, the
+input data and addresses for the ports are registered at the input of the memory array.
+Write Port
+
+Read Port
+
+WDATA[15:0]
+
+RDATA[15:0]
+
+MASK[15:0]
+RADDR[7:0]
+
+WADDR[7:0]
+RAM4K
+RAM Block
+(256x16)
+
+WE
+
+RE
+
+WCLKE
+
+RCLKE
+
+WCLK
+
+RCLK
+
+Figure 3.4. sysMEM Memory Primitives
+Table 3.5 lists the EBR signals.
+Table 3.5. EBR Signal Descriptions
+Signal Name
+WDATA[15:0]
+
+Direction
+Input
+
+Description
+Write Data Input
+
+MASK[15:0]
+
+Input
+
+WADDR[7:0]
+WE
+
+Input
+Input
+
+Masks write operations for individual data bit-lines.
+0 – Write bit
+1 – Do not write bit
+Write Address Input. Selects one of 256 possible RAM locations.
+Write Enable Input
+
+WCLKE
+WCLK
+RDATA[15:0]
+
+Input
+Input
+Output
+
+Write Clock Enable Input
+Write Clock Input. Default rising-edge, but with falling-edge option.
+Read Data Output
+
+RADDR[7:0]
+RE
+
+Input
+Input
+
+Read Address Input. Selects one of 256 possible RAM locations.
+Read Enable Input
+
+RCLKE
+RCLK
+
+Input
+Input
+
+Read Clock Enable Input
+Read Clock Input. Default rising-edge, but with falling-edge option.
+
+For further information on the sysMEM EBR block, refer to Memory Usage Guide for iCE40 Devices (FPGA-TN-02002).
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+16
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+3.1.6. sysMEM Single Port RAM Memory (SPRAM)
+The SPRAM block is implemented to be accessed only as a single port. Each block of SPRAM is designed to be 16K x 16
+(256 kbits) in size. See Figure 3.5.
+SPRAM Data Width
+The SPRAM is designed with fixed 16-bit data width. However, the block contains nibble mask control on the write
+input that allows the user logic to operate the SPRAM as x4 or x8 with this control on the write side. It also allows the
+user logic to select which nibble/byte is in the read side.
+SPRAM Initialization and ROM Operation
+There is no pre-load into the SPRAM during device configuration. Therefore, the SPRAM is not initialized after
+configuration.
+SPRAM Cascading
+Deeper SPRAM can be created using multiple SPRAM blocks, up to four blocks (64K x 16).
+SPRAM Power Modes
+There are three power modes in the SPRAM that the users can select during normal operation. This reduces the SPRAM
+block power when it is not needed, allowing lower power consumption in an always-on application. These modes are:
+• Standby Mode: SPRAM stops all activity, and SPRAM freezes in its current state. Memory contents are retained,
+memory outputs are retained, and all register contents are retained.
+• Sleep Mode: SPRAM block is shut down on all peripheral circuit, except the memory core. Memory contents are
+retained, memory outputs and register contents are clear and become unknown.
+• Power Off Mode: Power source to the SPRAM is disconnected. This is the lowest power state. Memory contents
+are lost. Memory outputs are unknown.
+
+DATAOUT [15:0]
+
+MASKWREN [3:0]
+WREN
+MASKWREN [3:0]
+WREN
+CHIPSELECT
+
+Single Port RAM Primitive
+SB_SPRAM256KA
+
+CLOCK
+STANDBY
+SLEEP
+POWEROFFN
+
+Figure 3.5. SPRAM Primitive
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+17
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Table 3.6. SPRAM Signal Descriptions
+Signal Name
+
+Direction
+
+Description
+
+ADDRESS[13:0]
+
+Input
+
+Address Input
+
+DATAIN[15:0]
+MASKWREN[3:0]
+WREN
+CHIPSELECT
+CLOCK
+STANDY
+
+Input
+Input
+Input
+Input
+Input
+Input
+
+Write Data Input
+Nibble WE Control
+Write Enable
+Enable SPRAM
+Clock Input
+Standby Mode
+
+SLEEP
+
+Input
+
+Sleep Mode
+
+POWEROFF
+
+Input
+
+Switch Off Power Source to SPRAM
+
+DATAOUT[15:0]
+
+Output
+
+Output Data
+
+For further information on sysMEM SPRAM block, refer to iCE40 SPRAM Usage Guide (FPGA-TN-02022).
+
+3.1.7. sysDSP
+The iCE40 UltraPlus family provides an efficient sysDSP architecture that is very suitable for low-cost Digital Signal
+Processing (DSP) functions for mobile applications. Typical functions used in these applications are Multiply,
+Accumulate, and Multiply-Accumulate. The block can also be used for simple Add and Subtract functions.
+iCE40 UltraPlus sysDSP Architecture Features
+The iCE40 UltraPlus sysDSP supports many functions that include the following:
+• Single 16-bit x 16-bit Multiplier, or two independent 8-bit x 8-bit Multipliers
+• Optional independent pipeline control on Input Register, Output Register, and Intermediate Reg faster clock
+performance
+• Single 32-bit Accumulator, or two independent 16-bit Accumulators
+• Single 32-bit, or two independent 16-bit Adder/Subtracter functions, registered or asynchronous
+• Cascadable to create wider Accumulator blocks
+Figure 3.6 shows the block diagram of the sysDSP block. The block consists of the Multiplier section with a bypassable
+Output register, Input Register, and Intermediate register between Multiplier and AC timing to achieve the highest
+performance.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+18
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Figure 3.6. sysDSP Functional Block Diagram (16-bit x 16-bit Multiply-Accumulate)
+Table 3.7. Output Block Port Description
+Width
+
+Input/
+Output
+
+CLK
+
+1
+
+Input
+
+ENA
+
+CE
+
+1
+
+Input
+
+A[15:0]
+
+A[15:0]
+
+16
+
+Input
+
+B[15:0]
+
+B[15:0]
+
+16
+
+Input
+
+C[15:0]
+
+C[15:0]
+
+16
+
+Input
+
+D[15:0]
+
+D[15:0]
+
+16
+
+Input
+
+AHLD
+
+AHOLD
+
+1
+
+Input
+
+BHLD
+
+BHOLD
+
+1
+
+Input
+
+Signal
+
+Primitive
+Port Name
+
+CLK
+
+Function
+Clock Input. Applies to all clocked elements in
+the sysDSP block.
+Clock Enable Input. Applies to all clocked
+elements in the sysDSP block.
+0 – Not enabled
+1 – Enabled
+Input to the A Register. Feeds the Multiplier or is
+a direct input to the Adder Accumulator.
+Input to the B Register. Feeds the Multiplier or is
+a direct input to the Adder Accumulator.
+Input to the C Register. It is a direct input to the
+Adder Accumulator.
+Input to the D Register. It is a direct input to the
+Adder Accumulator.
+A Register Hold.
+0 – Update
+1 – Hold
+B Register Hold.
+0 – Update
+1 – Hold
+
+Default
+—
+
+0 – Enabled
+
+16'b0
+16'b0
+16'b0
+16'b0
+0 – Update
+
+0 – Update
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+19
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Width
+
+Input/
+Output
+
+CHOLD
+
+1
+
+Input
+
+DHLD
+
+DHOLD
+
+1
+
+Input
+
+IHRST
+
+IRSTTOP
+
+1
+
+Input
+
+ILRST
+
+IRSTBOT
+
+1
+
+Input
+
+O[31:0]
+
+O[31:0]
+
+32
+
+Output
+
+OHHLD
+
+OHOLDTOP
+
+1
+
+Input
+
+OHRST
+
+ORSTTOP
+
+1
+
+Input
+
+OHLDA
+
+OLOADTOP
+
+1
+
+Input
+
+OHADS
+
+ADDSUBTOP
+
+1
+
+Input
+
+OLHLD
+
+OHOLDBOT
+
+1
+
+Input
+
+OLRST
+
+ORSTBOT
+
+1
+
+Input
+
+Signal
+
+Primitive
+Port Name
+
+CHLD
+
+Function
+C Register Hold.
+0 – Update
+1 – Hold
+D Register Hold.
+0 – Update
+1 – Hold
+Reset input to A and C input registers, and the
+pipeline registers in the upper half of the
+Multiplier Section.
+0 – No reset
+1 – Reset
+Reset input to B and D input registers, and the
+pipeline registers in the lower half of the
+Multiplier Section. It also resets the Multiplier
+result pipeline register.
+0 – No reset
+1 – Reset
+Output of the sysDSP block. This output can be:
+•
+O[31:0] – 32-bit result of 16x16 Multiplier
+or MAC
+•
+O[31:16] – 16-bit result of 8x8 upper half
+Multiplier or MAC
+•
+O[15:0] – 16-bit result of 8x8 lower half
+Multiplier or MAC
+High-order (upper half) Accumulator Register
+Hold.
+0 – Update
+1 – Hold
+Reset input to high-order (upper half) bits of the
+Accumulator Register.
+0 – No reset
+1 – Reset
+High-order (upper half) Accumulator Register
+Accumulate/Load control.
+0 – Accumulate, register is loaded with
+Adder/Subtracter results
+1 – Load, register is loaded with Input C or C
+Register
+High-order (upper half) Accumulator Add or
+Subtract select.
+0 – Add
+1 – Subtract
+Low-order (lower half) Accumulator Register
+Hold.
+0 – Update
+1 – Hold
+Reset input to Low-order (lower half) bits of the
+Accumulator Register.
+0 –No reset
+1 – Reset
+
+Default
+0 – Update
+
+0 – Update
+
+0 – No reset
+
+0 – No reset
+
+—
+
+0 – Update
+
+0 – No reset
+
+0 – Accumulate
+
+0 – Add
+
+0 – Update
+
+0 – No reset
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+20
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Signal
+
+Primitive
+Port Name
+
+Width
+
+Input/
+Output
+
+Function
+
+OLLDA
+
+OLOADBOT
+
+1
+
+Input
+
+OLADS
+
+ADDSUBBOT
+
+1
+
+Input
+
+CICAS
+
+ACCUMCI
+
+1
+
+Input
+
+CI
+
+CI
+
+1
+
+Input
+
+COCAS
+
+ACCUMCO
+
+1
+
+Output
+
+CO
+
+CO
+
+1
+
+Output
+
+Low-order (lower half) Accumulator Register
+Accumulate/Load control.
+0 – Accumulate, register is loaded with
+Adder/Subtracter results
+1 – Load, register is loaded with Input C or C
+Register
+Low-order (lower half) Accumulator Add or
+Subtract select.
+0 – Add
+1 – Subtract
+Cascade Carry/Borrow input from previous
+sysDSP block.
+Carry/Borrow input from lower logic tile.
+Cascade Carry/Borrow output to next sysDSP
+block.
+Carry/Borrow output to higher logic tile.
+
+SIGNEXTIN
+SIGNEXTOUT
+
+SIGNEXTIN
+SIGNEXTOUT
+
+1
+1
+
+Input
+Output
+
+Sign extension input from previous sysDSP block.
+Sign extension output to next sysDSP block.
+
+Default
+
+0–
+Accumulate
+
+0 – Add
+
+—
+—
+—
+—
+—
+—
+
+The iCE40 UltraPlus sysDSP can support the following functions:
+• 8-bit x 8-bit Multiplier
+• 16-bit x 16-bit Multiplier
+• 16-bit Adder/Subtracter
+• 32-bit Adder/Subtracter
+• 16-bit Accumulator
+• 32-bit Accumulator
+• 8-bit x 8-bit Multiply-Accumulate
+• 16-bit x 16-bit Multiply-Accumulate
+Figure 3.7 shows the path for an 8-bit x 8-bit Multiplier using the upper half of sysDSP block.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+21
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Input Registers
+
+SIGNEXTOUT
+
+CO
+
+COCAS
+
+Accumulator
+
+0
+1
+
+Multiplier
+
+Q [ 31 :16 ]
+
+0
+
+C[ 15 :0 ]
+
+D
+
+CHLD
+
+HLD
+
+Q
+
+OHADS
+
+W
+
+0
+
+C
+
+X
+
+C12
+
+C0
+
+R
+
+±
+
+1
+
+16 x 16 Pipeline
+Registers
+
+[ 15 :0 ]
+
+Q
+
+P
+
+1
+
+0
+
+0
+
+D
+1
+
+1
+
+Q
+
+O [ 31 :16 ]
+
+HLD
+
+2
+R
+
+3
+
+X [ 15 ]
+0
+
+A
+
+0
+
+F
+A [ 15 :8 ]
+
+0
+
+C9
+
+8 x 8 =16
+
+OHRST
+OHHLD
+OHLDA
+
+2
+
+Q
+
+[15:8]
+
+1
+
+3
+
+8 x8
+
+J
+0
+
+D
+
++
+
+C4
+
+R
+
+A [ 7 :0 ]
+
+Q
+
+1
+[15:8]
+
+B [ 15 :8 ]
+
+HLD
+
++
+
+C6
+
+R
+
+[15:8]
+
+A [ 15 :8 ]
+
+Q
+
+[ 15 : 0 ]
+
+D
+
+Q
+
+BHLD
+
+HLD
+
+1
+
+R
+
+[ 15 :8 ]
+
+P [ 15 : 8 ]
+
+OLADS
+
+Y
+
+0
+
+[7:0]
+
+C5
+
+P [ 7: 0 ]
+
+±
+
+Z
+
+C19
+
+D
+1
+
+8 x 8 = 16
+
+Q
+
+O [ 15 :0 ]
+2
+3
+
+Z [ 15 ]
+C 16
+
+D
+
+Low
+
+C 15
+
+OLRST
+OLHLD
+OLLDA
+
+LCI
+
+D
+
+1
+
+0
+
+3
+C 18
+C 17
+
+1
+
+HLD
+
+C3
+ASGND=C23
+3
+
+1
+
+2
+
+0
+
+BSGND=C24
+
+0
+
+1
+
+CICAS
+
+CI
+
+ILRST
+CLK
+
+C20
+
+R
+
+C21
+
+DHLD
+
+Q
+
+HLD
+R
+
+2
+
+D[ 15 :0 ]
+
+0
+
+0
+
+1
+
+0
+
+S
+
+R
+
+1
+
+[ 15 : 0 ]
+
+1
+
+B
+
+C2
+
+R
+
+Q
+
+R
+
+1
+
+LCOCAS
+Q [15:0]
+
++
+G
+
+0
+
+8 x8
+
+0
+
+LCO
+[ 15 : 0 ]
+
+C7
+
+[7:0]
+
+C6
+
+A [ 7 :0 ]
+
+B [ 15 :0 ]
+
+[ 31 : 16 ]
+
+1
+
+[7:0]
+
+1
+
+HLD
+
+D
+
+Q
+
+R
+
+B [ 7 :0 ]
+
+8 x8
+
+D
+
+CSA
+
+D
+
+H
+
+0
+
+HLD
+
+K
+
+0
+
+B [ 7 :0 ]
+
+16 x 16 =32
+
+L
+
+8 x 8 PowerSave
+
+C 22
+
+IHRST
+
+Register
+
+P [ 23 : 16 ]
+
+CSA
+
+8 x8
+
+0
+
+C 11
+C 10
+
+16 x 16
+Pipeline
+
+[7:0]
+
+[15 :0 ]
+
+C13
+
+R
+
+HCI
+
+P [ 31 : 24 ]
+
+C14
+
+D
+B [ 15 :8 ]
+
+C1
+
+3
+
+1
+
+2
+
+Q
+
+1
+
+HLD
+
+0
+1
+
+D
+
+AHLD
+
+0
+
+A [ 15 :0 ]
+
+High
+
+C8
+
+1
+
+[ 15 :0 ]
+
+ENA
+
+( 25 - FEB - 2012 )
+SIGNEXTIN
+
+Figure 3.7. sysDSP 8-bit x 8-bit Multiplier
+Figure 3.8 shows the path for an 16-bit x 16-bit Multiplier using the upper half of sysDSP block.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+22
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Input Registers
+
+SIG N EXTOU T
+
+CO
+
+COCA S
+
+Accumulator
+
+0
+1
+
+Multiplier
+
+Q[31:16]
+
+1
+
+16x16 Pipeline
+Registers
+
+Q
+
+1
+
+D
+
+B[15: 8]
+
+HL D
+
+C1
+
+R
+
+8x8
+
+Q
+
+D
+
+Q
+
+HL D
+
+8x8
+
+3
+
++
+
+[7:0]
+
+J
+
+A[15:8]
+
+[15: 8]
+
++
+
+D
+
+Q
+
+B[15 : 0]
+BH LD
+
+Q
+
+D
+
+1
+
+HL D
+
+C2
+
+R
+
+8x8
+
+R
+
+D
+
+Q
+R
+
+H
+
+[31:16]
+
+[15:0]
+
+0
+
+1
+
+LCO
+
+1
+
+C7
+
+LCOCA S
+
+Q[15:0
+
+[7:0]
+
+1
+
+[7:0]
+
+G
+
+0
+
+D Q
+
+B[7:0]
+
+0
+
+HL D
+
+[15 :0]
+
+C6
+
+R
+
+A[7:0]
+
+0
+
+16 x16 =32
+
+L
+
+HL D
+
+8x8
+
+P[23:16 ]
+
+K
+
+0
+
+B [7:0]
+
+C1 1
+C1 0
+
+16x16
+Pipeline
+Register
+
+1
+
+8x8 Pow erSave
+
+C2 2
+
+OH RST
+OH HLD
+OH LD A
+
+H CI
+
+P[31:24]
+
+[ 15:0]
+
+[15: 8]
+
+IH RST
+
+[15 : 8]
+
++
+
+P[15:8]
+
+[7:0]
+
+P[7:0]
+C1 9
+
+±
+
+Z
+
+1
+
+0
+
+1
+
+HL D
+
+2
+
+R
+
+3
+
+O[ 15:0]
+
+Low
+
+C1 6
+C1 5
+
+OLRST
+OLHLD
+OLLD A
+
+D
+
+LCI
+C1 8
+
+C1 7
+
+1
+
+ILRST
+CLK
+EN A
+SIG N EXTIN
+
+CIC AS CI
+
+C2 0
+
+1
+
+3
+
+0
+
+2
+
+C21
+
+AS GND=23
+BSG ND=2 4
+1
+
+C3
+
+0
+
+HL D
+R
+
+Q
+
+Z[15]
+
+3
+
+Q
+
+D
+
+0
+
+2
+
+D
+
+0
+
+0
+
+8x8=16
+
+B
+
+S
+
+R
+
+1
+
+[15:0]
+
+1
+
+C5
+
+OLAD S
+
+Y
+
+0
+
+1
+
+D[15 : 0]
+D HLD
+
+High
+
+C9
+
+2
+
+C6
+
+R
+
+O[ 31:16]
+
+C8
+
+1
+
+[15 : 8]
+
+0
+
+B[15:8 ]
+
+0
+
+8x8=16
+
+[ 15:0]
+
+1
+
+C4
+
+R
+
+A[7 : 0]
+
+3
+
+X[ 15]
+
+F
+
+0
+
+2
+
+R
+
+C14
+
+D
+
+A[15 : 8]
+
+1
+
+Q
+
+HL D
+
+C 13
+
+A[15 : 0]
+AH LD
+
+A
+
+D
+
+0
+
+4
+
+[15 :0]
+
+0
+
+0
+
+Q
+
+P
+
+1
+
+1
+
+R
+
+±
+
+X
+
+C1 2
+
+C0
+
+3
+
+Q
+
+HL D
+
+2
+
+D
+
+1
+
+0
+
+C[15 : 0]
+CH LD
+
+OH AD S
+
+W
+
+0
+
+C
+
+0
+1
+
+0
+
+(25-FE B-2012)
+
+Figure 3.8. DSP 16-bit x 16-bit Multiplier
+
+3.1.8. sysI/O Buffer Banks
+iCE40 UltraPlus devices have up to three I/O banks with independent V CCIO rails. The configuration SPI interface signals
+are powered by SPI_VCCIO1. Refer to the
+Pin Information Summary table.
+Programmable I/O (PIO)
+The programmable logic associated with an I/O is called a PIO. The individual PIOs are connected to their respective
+sysI/O buffers and pads. The PIOs are placed on the top and bottom of the devices.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+23
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+VCCIO
+I/O Bank 0 or 2
+Voltage S upply
+0 = Hi-Z
+1 = Output
+Enabled
+
+Enabled ‘1’
+Disabled ‘0’
+
+Pull-up
+
+OE
+50 ns Dela y
+
+Pull-up
+Enable
+
+50 ns Dela y
+
+OUTCLK
+
+50 ns Filter
+50 ns Filter
+
+5 PLB R ows
+
+OUT
+
+PAD
+OUTCLK
+
+iCEGATE
+HOLD
+
+HD
+
+Latch inhibits
+switching f or
+power saving
+
+IN
+
+INC LK
+
+Gxx pins optionally
+connect directly to
+an associated
+GBUF global
+buff er
+
+Figure 3.9. I/O Bank and Programmable I/O Cell
+The PIO contains three blocks: an input register block, output register block iCEGate™ and tri-state register block. To
+save power, the optional iCEGate™ latch can selectively freeze the state of individual, non-registered inputs within an
+I/O bank. Note that the freeze signal is common to the bank. These blocks can operate in a variety of modes along with
+the necessary clock and selection logic.
+Input Register Block
+The input register blocks for the PIOs on all edges contain registers that can be used to condition high-speed interface
+signals before they are passed to the device core.
+Output Register Block
+The output register block can optionally register signals from the core of the device before they are passed to the
+sysI/O buffers.
+Figure 3.10 shows the input/output register block for the PIOs.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+24
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+PIO Pair
+
+CLOCK_ENABLE
+OUTPUT_CLK
+INPUT_CLK
+(1,0)
+
+LATCH_INPUT_VALUE
+
+D_IN_1
+D_IN_0
+Pad
+
+D_OUT_1
+D_OUT_0
+(1,0)
+0
+1
+
+OUTPUT_ENABLE
+
+(1,0)
+
+LATCH_INPUT_VALUE
+
+D_IN_1
+D_IN_0
+Pad
+
+D_OUT_1
+D_OUT_0
+(1,0)
+0
+1
+
+OUTPUT_ENABLE
+
+= Statically defined by configuration program.
+
+Figure 3.10. iCE I/O Register Block Diagram
+Table 3.8. PIO Signal List
+Pin Name
+
+I/O Type
+
+Description
+
+OUTPUT_CLK
+
+Input
+
+Output Register Clock
+
+CLOCK_ENABLE
+
+Input
+
+Clock Enable
+
+INPUT_CLK
+
+Input
+
+Input Register Clock
+
+OUTPUT_ENABLE
+
+Input
+
+Output Enable
+
+D_OUT_0/1
+
+Input
+
+Data from the Core
+
+D_IN_0/1
+
+Output
+
+Data to the Core
+
+LATCH_INPUT_VALUE
+
+Input
+
+Latches/Holds the Input Value
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+25
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+3.1.9. sysI/O Buffer
+Each I/O is associated with a flexible buffer referred to as a sysI/O buffer. These buffers are arranged around the
+periphery of the device in groups referred to as banks. The sysI/O buffers allow users to implement a wide variety of
+standards that are found in today’s systems with LVCMOS interfaces.
+Typical I/O Behavior During Power-up
+The internal power-on-reset (POR) signal is deactivated when VCC, SPI_VCCIO1 and VPP_2V5 reach the level defined in
+Table 4.4. After the POR signal is deactivated, the FPGA core logic becomes active. You must ensure that all VCCIO banks
+are active with valid input logic levels to properly control the output logic states of all the I/O banks that are critical to
+the application. The default configuration of the I/O pins in a device prior to configuration is tri-stated with a weak
+pull-up to VCCIO. The I/O pins maintain the pre-configuration state until VCC, SPI_VCCIO1 and VPP_2V5 reach the defined
+levels. The I/Os take on the software user-configured settings only after POR signal is deactivated and the device
+performs a proper download/configuration. Unused I/Os are automatically blocked and the pull-up termination is
+disabled.
+Supported Standards
+The iCE40 UltraPlus sysI/O buffer supports both single-ended input/output standards, and used as differential
+comparators. The buffer supports input/output 1.8 V, 2.5 V, and 3.3 V standards, and LVCMOS 1.2 V standard output
+only. The buffer has individually configurable options for bus maintenance (weak pull-up or none).
+Table 3.9 and Table 3.10 show the I/O standards (together with their supply and reference voltages) supported by the
+iCE40 UltraPlus devices.
+Differential Comparators
+The iCE40 UltraPlus devices provide differential comparator on pairs of I/O pins. These comparators are useful in some
+mobile applications. Refer to the
+Pin Information Summary section for the number of paired I/O available in each bank to implement differential
+comparators. Refer to the device pinout file from the Lattice website for exact pin locations.
+Table 3.9. Supported Input Standards
+I/O Standard
+
+VCCIO (Typical)
+3.3 V
+
+2.5 V
+
+1.8 V
+
+1.2 V
+
+LVCMOS33
+
+Yes
+
+—
+
+—
+
+—
+
+LVCMOS25
+
+—
+
+Yes
+
+—
+
+—
+
+LVCMOS18
+
+—
+
+—
+
+Yes
+
+—
+
+Single-Ended Interfaces
+
+Table 3.10. Supported Output Standards
+I/O Standard
+
+VCCIO (Typical)
+
+Single-Ended Interfaces
+LVCMOS33
+
+3.3 V
+
+LVCMOS25
+
+2.5 V
+
+LVCMOS18
+
+1.8 V
+
+LVCMOS12
+
+1.2 V
+
+3.1.10. On-Chip Oscillator
+The iCE40 UltraPlus devices feature two different frequency Oscillator. One is tailored for low-power operation that
+runs at low frequency (LFOSC). Both Oscillators are controlled with internally generated current.
+The LFOSC runs at nominal frequency of 10 kHz. The high frequency oscillator (HFOSC) runs at a nominal frequency of
+48 MHz, divisible to 24 MHz, 12 MHz, or 6 MHz by user option. The LFOSC can be used to perform all always-on
+functions, with the lowest power possible. The HFOSC can be enabled when the always-on functions detect a condition
+that would need to wake up the system to perform higher frequency functions.
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+26
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+3.1.11. User I2C IP
+The iCE40 UltraPlus devices have two I2C IP cores. Either of the two cores can be configured either as an I2C master or
+as an I2C slave. The pins for the I2C interface are not pre-assigned. User can use any General Purpose I/O pins.
+In each of the two cores, there are options to delay either the input or the output, or both, by 50 ns nominal, using
+dedicated on-chip delay elements. This provides an easier interface with any external I2C components.
+When the IP core is configured as master, it will be able to control other devices on the I2C bus through the
+pre-assigned pin interface. When the core is configured as the slave, the device is able to provide I/O expansion to an
+I2C Master. The I2C cores support the following functionality:
+• Master and Slave operation
+• 7-bit and 10-bit addressing
+• Multi-master arbitration support
+• Clock stretching
+• Up to 400 kHz data transfer speed
+• General Call support
+• Optionally delaying input or output data, or both
+• Optional filter on SCL input
+For further information on the User I2C, refer to iCE40 SPI/I2C Hardened IP Usage Guide (FPGA-TN-02010).
+
+3.1.12. User SPI IP
+The iCE40 UltraPlus devices have two SPI IP cores. The pins for the SPI interface are not pre-assigned. User can use any
+General Purpose I/O pins. Both SPI IP cores can be configured as a SPI master or as a slave. When the SPI IP core is
+configured as a master, it controls the other SPI enabled devices connected to the SPI Bus. When SPI IP core is
+configured as a slave, the device is able to interface to an external SPI master.
+The SPI IP core supports the following functions:
+• Configurable Master and Slave modes
+• Full-Duplex data transfer
+• Mode fault error flag with CPU interrupt capability
+• Double-buffered data register
+• Serial clock with programmable polarity and phase
+• LSB First or MSB First Data Transfer
+For further information on the User SPI, refer to iCE40 SPI/I2C Hardened IP Usage Guide (FPGA-TN-02010).
+
+3.1.13. RGB High Current Drive I/O Pins
+The iCE40 UltraPlus family devices offer multiple high current LED drive outputs in each device in the family to allow
+the iCE40 UltraPlus product to drive LED signals directly on mobile applications.
+There are three outputs on each device that can sink up to 24 mA current. These outputs are open-drain outputs, and
+provides sinking current to an LED connecting to the positive supply. These three outputs are designed to drive the RBG
+LEDs, such as the service LED found in a lot of mobile devices. This RGB drive current is user programmable from 4 mA
+to 24 mA, in increments of 4 mA. This output functions as General Purpose I/O with open-drain when the high current
+drive is not needed.
+
+3.1.14. RGB PWM IP
+To provide an easier usage of the RGB high current drivers to drive RGB LED, a Pulse-Width Modulator IP can be used in
+the user design. This PWM IP provides the flexibility for user to dynamically change the modulation width of each of
+the RGB LED driver, which changes the color. Also, the user can dynamically change the settings on the ON-time
+duration, OFF-time duration, and ability to turn the LED lights on and off gradually with user set breath-on and
+breath-off time.
+For additional information on the PWM IP, refer to iCE40 LED Driver Usage Guide (FPGA-TN-02021).
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+27
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+3.1.15. Non-Volatile Configuration Memory
+All iCE40 UltraPlus devices provide a Non-Volatile Configuration Memory (NVCM) block which can be used to configure
+the device.
+For more information on the NVCM, refer to iCE40 Programming and Configuration (FPGA-TN-02001).
+
+3.2. iCE40 UltraPlus Programming and Configuration
+This section describes the programming and configuration of the iCE40 UltraPlus family.
+
+3.2.1. Device Programming
+The NVCM memory can be programmed through the SPI port. The SPI port is located in Bank 1, using SPI_VCCIO1 power
+supply.
+
+3.2.2. Device Configuration
+There are various ways to configure the Configuration RAM (CRAM), using SPI port, including:
+• From a SPI Flash (Master SPI mode)
+• System microprocessor to drive a Serial Slave SPI port (SSPI mode)
+For more details on configuring the iCE40 UltraPlus, refer to iCE40 Programming and Configuration (FPGA-TN-02001).
+
+3.2.3. Power Saving Options
+The iCE40 UltraPlus devices feature iCEGate and PLL low power mode to allow users to meet the static and dynamic
+power requirements of their applications. Table 3.11 describes the function of these features.
+Table 3.11. iCE40 UltraPlus Power Saving Features Description
+Device Subsystem
+PLL
+iCEGate
+
+Feature Description
+When LATCHINPUTVALUE is enabled, puts the PLL into low-power mode; PLL output held static at last
+input clock value.
+To save power, the optional iCEGate latch can selectively freeze the state of individual, non-registered
+inputs within an I/O bank. Registered inputs are effectively frozen by their associated clock or
+clock-enable control.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+28
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+4. DC and Switching Characteristics
+4.1. Absolute Maximum Ratings
+Table 4.1. Absolute Maximum Ratings
+Parameter
+Supply Voltage VCC
+
+Min
+
+Max
+
+Unit
+
+–0.5
+
+1.42
+
+V
+
+Output Supply Voltage VCCIO
+
+–0.5
+
+3.60
+
+V
+
+NVCM Supply Voltage VPP_2V5
+
+–0.5
+
+3.60
+
+V
+
+PLL Supply Voltage VCCPLL
+
+–0.5
+
+1.42
+
+V
+
+I/O Tri-state Voltage Applied
+
+–0.5
+
+3.60
+
+V
+
+Dedicated Input Voltage Applied
+
+–0.5
+
+3.60
+
+V
+
+Storage Temperature (Ambient)
+
+–65
+
+150
+
+°C
+
+Junction Temperature (TJ)
+
+–65
+
+125
+
+°C
+
+Notes:
+•
+Stress above those listed under the Absolute Maximum Ratings may cause permanent damage to the device. Functional
+operation of the device at these or any other conditions above those indicated in the operational sections of this specification is
+not implied.
+•
+Compliance with the Thermal Management (FPGA-TN-02044) is required.
+•
+All voltages referenced to GND.
+
+4.2. Recommended Operating Conditions
+Table 4.2. Recommended Operating Conditions
+Symbol
+VCC1
+
+Parameter
+Core Supply Voltage
+
+Min
+1.14
+
+Max
+1.26
+
+Unit
+V
+
+VPP_2V5
+
+VPP_2V5 NVCM
+Programming and
+Operating Supply Voltage
+
+Slave SPI Configuration
+Master SPI Configuration
+Configuration from NVCM
+
+1.714
+2.30
+2.30
+
+3.46
+3.46
+3.46
+
+V
+V
+V
+
+VCCIO1, 2, 3
+VCCPLL
+
+I/O Driver Supply Voltage
+PLL Supply Voltage
+
+NVCM Programming
+VCCIO_0, SPI_VCCIO1, VCCIO_2
+
+2.30
+1.20
+1.14
+
+3.00
+3.46
+1.26
+
+V
+V
+V
+
+tJCOM
+tJIND
+
+Junction Temperature Commercial Operation
+Junction Temperature, Industrial Operation
+
+0
+–40
+
+85
+100
+
+°C
+°C
+
+tPROG
+Junction Temperature NVCM Programming
+10.00
+30.00
+°C
+Notes:
+1. Like power supplies must be tied together if they are at the same supply voltage and they meet the power up sequence
+requirement. See the Power-up Supply Sequence section. VCC and VCCPLL are recommended to be tied together to the same
+supply with an RC-based noise filter between them. Refer to iCE40 Hardware Checklist (FPGA-TN-02006).
+2. See recommended voltages by I/O standard in subsequent table.
+3. VCCIO pins of unused I/O banks should be connected to the VCC power supply on boards.
+4. VPP_2V5 can, optionally, be connected to a 1.8 V (+/–5%) power supply in Slave SPI Configuration modes subject to the condition
+that none of the HFOSC/LFOSC and RGB LED driver features are used. Otherwise, V PP_2V5 must be connected to a power supply
+with a minimum 2.30 V level.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+29
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+4.3. Power Supply Ramp Rates
+Table 4.3. Power Supply Ramp Rates
+Symbol
+
+Parameter
+
+Min
+
+Max
+
+Unit
+
+tRAMP
+
+Power supply ramp rates for all power supplies
+
+0.6
+
+10
+
+V/ms
+
+Notes:
+•
+Assumes monotonic ramp rates.
+•
+Power up sequence must be followed. See the Power-up Supply Sequence section below.
+
+4.4. Power-On Reset
+All iCE40 UltraPlus devices have on-chip Power-On-Reset (POR) circuitry to ensure proper initialization of the device.
+Only three supply rails are monitored by the POR circuitry as follows: (1) V CC, (2) SPI_VCCIO1 and (3) VPP_2V5. All other
+supply pins have no effect on the power-on reset feature of the device. Note that all supply voltage pins must be
+connected to power supplies for normal operation (including device configuration).
+
+4.5. Power-up Supply Sequence
+It is recommended to bring up the power supplies in the following order. Note that there is no specified timing delay
+between the power supplies, however, there is a requirement for each supply to reach a level of 0.5 V, or higher,
+before any subsequent power supplies in the sequence are applied.
+1.
+
+VCC and VCCPLL should be the first two supplies to be applied. Note that these two supplies can be tied together
+subject to the recommendation to include an RC-based noise filter on the VCCPLL. Refer to iCE40 Hardware Checklist
+(FPGA-TN-02006).
+
+2.
+
+SPI_VCCIO1 should be the next supply, and can be applied any time after the previous supplies (V CC and VCCPLL) have
+reached as level of 0.5 V or higher.
+
+3.
+
+VPP_2V5 should be the next supply, and can be applied any time after previous supplies (V CC, VCCPLL and SPI_VCCIO1)
+have reached a level of 0.5 V or higher.
+
+4.
+
+Other Supplies (VCCIO0 and VCCIO2) do not affect device power-up functionality, and they can be applied any time
+after the initial power supplies (VCC and VCCPLL) have reached a level of 0.5 V or greater. There is no power down
+sequence required. However, when partial power supplies are powered down, it is required the above sequence to
+be followed when these supplies are re-powered up again.
+
+Note: To check the VSUPPLY(MIN) shown in Figure 4.1, please refer to the minimum recommended operation conditions in
+the Recommended Operating Conditions section.
+
+4.6. External Reset
+When all power supplies have reached their minimum operating voltage defined in Table 4.2, it is required to either
+keep CRESET_B LOW, or toggle CRESET_B from HIGH to LOW, for a duration of t CRESET_B, and release it to go HIGH, to
+start configuration download from either the internal NVCM or the external Flash memory. Figure 4.1 shows Power-Up
+sequence when SPI_VCCIO1 and VPP_2V5 are not connected together, and the CRESET_B signal triggers configuration
+download. Figure 4.2 shows when SPI_VCCIO1 and VPP_2V5 are connected together. All power supplies should be
+powered up during configuration. Before and during configuration, the I/Os are held in tri-state. I/Os are released to
+user functionality once the device has finished configuration.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+30
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+VPP_2V5, VCCIO0 and VCCIO2 = 2.5V / 3.3V
+
+VSU PPLY (MI N)
+
+SPI_VCCIO1 =1.8V
+
+VCC/VCC_PLL =1.2V
+
+CRESET_B
+tCRES ET_B
+
+0.5V
+
+Figure 4.1. Power Up Sequence with SPE_VCCIO1 and VPP_2V5 Not Connected Together
+SPI_VCCIO, VPP_2V5, VCCIO0 and V CCIO2 = 1.8V / 2.5V / 3.3V
+
+VSUPPLY (MIN)
+VCC/VCC_PLL =1.2V
+CRESET_B
+tCRESET_B
+0.5V
+
+Figure 4.2. Power Up Sequence with All Supplies Connected Together to 1.8 V
+
+4.7. Power-On-Reset Voltage Levels
+Table 4.4. Power-On-Reset Voltage Levels
+Symbol
+
+Parameter
+
+VPORUP
+
+Power-On-Reset ramp up trip point (circuit
+monitoring VCC, SPI_VCCIO1, and VPP_2V5)
+
+VPORDN
+
+Power-On-Reset ramp down trip point (circuit
+monitoring VCC, SPI_VCCIO1, and VPP_2V5)
+
+Min
+
+Max
+
+Unit
+
+VCC
+
+0.62
+
+0.92
+
+V
+
+SPI_VCCIO1
+
+0.87
+
+1.50
+
+V
+
+VPP_2V5
+
+0.90
+
+1.53
+
+V
+
+VCC
+
+—
+
+0.79
+
+V
+
+SPI_VCCIO1
+
+—
+
+1.50
+
+V
+
+VPP_2V5
+
+—
+
+1.53
+
+V
+
+Note:
+1. These POR trip points are only provided for guidance. Device operation is only characterized for power supply voltages specified
+under recommended operating conditions.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+31
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+4.8. ESD Performance
+Please contact Lattice Semiconductor for additional information.
+
+4.9. DC Electrical Characteristics
+Over recommended operating conditions.
+Table 4.5. DC Electrical Characteristics
+Symbol
+
+Parameter
+
+Condition
+
+Min
+
+Typ
+
+Max
+
+Unit
+
+IIL, IIH1, 3, 4
+
+Input or I/O Leakage
+
+0 V < VIN < VCCIO + 0.2 V
+
+—
+
+—
+
+±10
+
+µA
+
+C1
+
+I/O Capacitance, excluding
+LED Drivers2
+
+VCCIO = 3.3 V, 2.5 V, 1.8 V
+VCC = Typ, VIO = 0 to VCCIO + 0.2 V
+
+—
+
+6
+
+—
+
+pF
+
+C2
+
+Global Input Buffer
+Capacitance2
+
+VCCIO = 3.3 V, 2.5 V, 1.8 V
+
+—
+
+6
+
+—
+
+pF
+
+C3
+
+RGB Pin Capacitance2
+
+VCC = Typ, VIO = 0 to 3.5 V
+
+—
+
+15
+
+—
+
+pF
+
+C4
+
+IRLED Pin Capacitance2
+
+VCC = Typ, VIO = 0 to 3.5 V
+
+—
+
+53
+
+—
+
+pF
+
+VHYST
+
+Input Hysteresis
+
+VCCIO = 1.8 V, 2.5 V, 3.3 V
+
+—
+
+200
+
+—
+
+mV
+
+VCCIO = 1.8 V, 0 ≤ VIN ≤ 0.65 * VCCIO
+
+−3
+
+—
+
+−31
+
+µA
+
+VCCIO = 2.5 V, 0 ≤ VIN ≤ 0.65 * VCCIO
+
+−8
+
+—
+
+−72
+
+µA
+
+VCCIO = 3.3 V, 0 ≤ VIN ≤ 0.65 * VCCIO
+
+−11
+
+—
+
+−128
+
+µA
+
+Internal PIO Pull-up Current
+
+IPU
+
+VCC = Typ, VIO = 0 to VCCIO + 0.2 V
+
+Notes:
+1. Input or I/O leakage current is measured with the pin configured as an input or as an I/O with the output driver tri-stated. It is
+not measured with the output driver active. Internal pull-up resistors are disabled.
+2. TJ 25 oC, f = 1.0 MHz.
+3. Refer to VIL and VIH in Table 4.13.
+4. Input pins are clamped to VCCIO and GND by a diode. When input is higher than VCCIO or lower than GND, the Input Leakage
+current is higher than the IIL and IIH.
+
+4.10. Supply Current
+Table 4.6. Supply Current
+Typ
+VCC =1.2 V
+
+Unit
+
+Core Power Supply Static Current
+
+75
+
+µA
+
+IPP2V5STDBY
+
+VPP_2V5 Power Supply Static Current
+
+0.55
+
+µA
+
+ISPI_VCCIO1STDBY
+
+SPI_VCCIO1 Power Supply Static Current
+
+0.5
+
+µA
+
+ICCIOSTDBY
+
+VCCIO Power Supply Static Current
+
+0.5
+
+µA
+
+ICCPEAK
+
+Core Power Supply Startup Peak Current
+
+12
+
+mA
+
+IPP_2V5PEAK
+
+VPP_2V5 Power Supply Startup Peak Current
+
+2.5
+
+mA
+
+ISPI_VCCIO1PEAK
+
+SPI_VCCIO1 Power Supply Startup Peak Current
+
+9.0
+
+mA
+
+ICCIOPEAK
+
+VCCIO Power Supply Startup Peak Current
+
+2.0
+
+mA
+
+Symbol
+
+Parameter
+
+ICCSTDBY
+
+Notes:
+•
+Assumes blank pattern with the following characteristics: all outputs are tri-stated, all inputs are configured as LVCMOS and
+held at VCCIO or GND, on-chip PLL is off. For more detail with your specific design, use the Power Calculator tool. Power specified
+with master SPI configuration mode. Other modes may be up to 25% higher.
+•
+Frequency = 0 MHz.
+•
+TJ = 25 °C, power supplies at nominal voltage, on devices processed in nominal process conditions.
+•
+Does not include pull-up.
+•
+Startup Peak Currents are measured with decoupling capacitances of 0.1 uF, 10 nF, and 1 nF to the power supply. Higher
+decoupling capacitance causes higher current.
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+32
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+4.11. User I2C Specifications
+Table 4.7. User I2C Specifications
+Symbol
+
+Parameter
+
+fSCL
+
+Spec (STD Mode)
+
+Spec (FAST Mode)
+
+Unit
+
+Min
+
+Typ
+
+Max
+
+Min
+
+Typ
+
+Max
+
+Maximum SCL Clock Frequency
+
+—
+
+—
+
+100
+
+—
+
+—
+
+400
+
+kHz
+
+tHI
+
+SCL Clock HIGH Time
+
+4
+
+—
+
+—
+
+0.6
+
+—
+
+—
+
+µs
+
+tLO
+
+SCL Clock LOW Time
+
+4.7
+
+—
+
+—
+
+1.3
+
+—
+
+—
+
+µs
+
+tSU,DAT
+
+Setup Time (DATA)
+
+250
+
+—
+
+—
+
+100
+
+—
+
+—
+
+ns
+
+tHD,DAT
+
+Hold Time (DATA)
+
+0
+
+—
+
+—
+
+0
+
+—
+
+—
+
+ns
+
+tSU,STA
+
+Setup Time (START Condition)
+
+4.7
+
+—
+
+—
+
+0.6
+
+—
+
+—
+
+µs
+
+tHD,STA
+
+Hold Time (START Condition)
+
+4
+
+—
+
+—
+
+0.6
+
+—
+
+—
+
+µs
+
+tSU,STO
+
+Setup Time (STOP Condition)
+
+4
+
+—
+
+—
+
+0.6
+
+—
+
+—
+
+µs
+
+tBUF
+
+Bus Free Time between STOP and START
+
+4.7
+
+—
+
+—
+
+1.3
+
+—
+
+—
+
+µs
+
+tCO,DAT
+
+SCL LOW to DATAOUT Valid
+
+—
+
+—
+
+3.4
+
+—
+
+—
+
+0.9
+
+µs
+
+4.12. I2C 50 ns Delay
+Table 4.8. I2C 50 ns Delay
+Symbol
+
+Parameter
+
+TDELAY
+
+Delay through 50 ns Delay Block
+
+Spec
+Min
+
+Typ
+
+Max
+
+—
+
+50
+
+—
+
+Unit
+ns
+
+4.13. I2C 50 ns Filter
+Table 4.9. I2C 50 ns Filter
+Symbol
+
+Parameter
+
+TFILTER-H
+TFILTER-L
+
+Spec
+
+Unit
+
+Min
+
+Typ
+
+Max
+
+HIGH Pulse Filter through 50 ns Filter Block
+
+—
+
+50
+
+—
+
+ns
+
+LOW Pulse Filter through 50 ns Filter Block
+
+—
+
+50
+
+—
+
+ns
+
+4.14. User SPI Specifications
+Table 4.10. User SPI Specifications
+Symbol
+
+Parameter
+
+Min
+
+Typ
+
+Max
+
+Unit
+
+fMAX
+
+Maximum SCK Clock Frequency
+
+—
+
+—
+
+45
+
+MHz
+
+Notes:
+•
+All setup and hold time parameters on external SPI interface are design-specific and generated by the Lattice Design Software
+too. These parameters include the following:
+•
+tSUmaster Master Setup Time (master mode)
+•
+tHOLDmaster Master Hold Time (master mode)
+•
+tSUslave
+Slave Setup Time (slave mode)
+•
+tHOLDslave Slave Hold Time (slave mode)
+•
+tSCK2OUT SCK to Out Delay (slave mode)
+•
+The SCLK duty cycle needs to be specified in the Lattice Design Software as a timing constraint in order to ensure proper timing
+check on SCLK HIGH and LOW (tHI, tLO) time.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+33
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+4.15. Internal Oscillators (HFOSC, LFOSC)
+Table 4.11. Internal Oscillators (HFOSC, LFOSC)
+Parameter
+Symbol
+
+Spec/Recommended
+
+Parameter Description
+
+Conditions
+
+Min
+
+Typ
+
+Max
+
+Unit
+
+Commercial Temp
+
+HFOSC Clock Frequency (tJ = 0 °C–85 °C)
+
+–10%
+
+48
+
+10%
+
+MHz
+
+Industrial Temp
+
+HFOSC Clock Frequency (tJ = –40 °C–100 °C)
+
+–20%
+
+48
+
+20%
+
+MHz
+
+—
+
+LFOSC CLKK Clock Frequency
+
+–10%
+
+10
+
+10%
+
+kHz
+
+Commercial Temp
+
+HFOSC Duty Cycle (tJ = 0 °C–85 °C)
+
+45
+
+50
+
+55
+
+%
+
+Industrial Temp
+
+HFOSC Duty Cycle (tJ = –40 °C–100 °C)
+
+40
+
+50
+
+60
+
+%
+
+DCHCLKLF
+
+—
+
+LFOSC Duty Cycle (Clock High Period)
+
+45
+
+50
+
+55
+
+%
+
+Tsync_on
+
+—
+
+Oscillator Output Synchronizer Delay
+
+—
+
+—
+
+5
+
+Cycles
+
+Tsync_off
+
+—
+
+Oscillator Output Disable Delay
+
+—
+
+—
+
+5
+
+Cycles
+
+fCLKHF
+fCLKLF
+DCHCLKHF
+
+Note:
+1. Glitchless enabling and disabling OSC clock outputs.
+
+4.16. sysI/O Recommended Operating Conditions
+Table 4.12. sysI/O Recommended Operating Conditions
+VCCIO (V)
+
+Standard
+
+Min
+
+Typ
+
+Max
+
+LVCMOS 3.3
+
+3.14
+
+3.3
+
+3.46
+
+LVCMOS 2.5
+
+2.37
+
+2.5
+
+2.62
+
+LVCMOS 1.8
+
+1.71
+
+1.8
+
+1.89
+
+4.17. sysI/O Single-Ended DC Electrical Characteristics
+Table 4.13. sysI/O Single-Ended DC Electrical Characteristics
+Input/Output
+Standard
+
+VIL
+Min (V)
+
+LVCMOS 3.3
+
+–0.3
+
+LVCMOS 2.5
+
+–0.3
+
+LVCMOS 1.8
+
+–0.3
+
+VIH
+Max (V)
+0.8
+0.7
+0.35 VCCIO
+
+Min (V)
+2.0
+1.7
+0.65 VCCIO
+
+Max (V)
+VCCIO+0.2 V
+VCCIO+0.2 V
+VCCIO+0.2 V
+
+VOL Max
+(V)
+
+VOH Min
+
+0.4
+
+(V)
+
+IOL
+(mA)
+
+IOH Max
+(mA)
+
+VCCIO − 0.4
+
+8
+
+–8
+
+0.2
+
+VCCIO − 0.2
+
+0.1
+
+–0.1
+
+0.4
+
+VCCIO − 0.4
+
+6
+
+–6
+
+0.2
+
+VCCIO − 0.2
+
+0.1
+
+–0.1
+
+0.4
+
+VCCIO − 0.4
+
+4
+
+–4
+
+0.2
+
+VCCIO − 0.2
+
+0.1
+
+–0.1
+
+4.18. Differential Comparator Electrical Characteristics
+Table 4.14. Differential Comparator Electrical Characteristics
+Parameter
+Symbol
+VREF
+
+Parameter Description
+
+Test Conditions
+
+Min
+
+Max
+
+Unit
+
+Reference Voltage to compare, on VINM
+
+VCCIO = 2.5 V
+
+0.25
+
+VCCIO - 0.25 V
+
+V
+
+VDIFFIN_H
+
+Differential Input HIGH (VINP - VINM)
+
+VCCIO = 2.5 V
+
+250
+
+—
+
+mV
+
+VDIFFIN_L
+
+Differential Input LOW (VINP - VINM)
+
+VCCIO = 2.5 V
+
+—
+
+–250
+
+mV
+
+IIN
+
+Input Current, VINP and VINM
+
+VCCIO = 2.5 V
+
+–10
+
+10
+
+µA
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+34
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+4.19. Typical Building Block Function Performance
+4.19.1. Pin-to-Pin Performance (LVCMOS25)
+Table 4.15. Pin-to-Pin Performance (LVCMOS25)
+Function
+
+Timing
+
+Unit
+
+16-Bit Decoder
+
+16.5
+
+ns
+
+4:1 Mux
+
+18.0
+
+ns
+
+16:1 Mux
+
+19.5
+
+ns
+
+Basic Functions
+
+Notes:
+•
+The above timing numbers are generated using the Lattice Design Software tool. Exact performance may vary with device and
+tool version. The tool uses internal parameters that have been characterized but are not tested on every device.
+•
+Using a VCC of 1.14 V at Junction Temperature 85 °C.
+
+4.19.2. Register-to-Register Performance
+Table 4.16. Register-to-Register Performance
+Function
+
+Timing
+
+Unit
+
+16:1 Mux
+
+110
+
+MHz
+
+16-Bit Adder
+
+100
+
+MHz
+
+16-Bit Counter
+
+100
+
+MHz
+
+64-Bit Counter
+
+40
+
+MHz
+
+150
+
+MHz
+
+Basic Functions
+
+Embedded Memory Functions
+256 x 16 Pseudo-Dual Port RAM
+
+Notes:
+•
+The above timing numbers are generated using the Lattice Design Software tool. Exact performance may vary with device and
+tool version. The tool uses internal parameters that have been characterized but are not tested on every device.
+•
+Under worst case operating conditions.
+
+4.20. sysDSP Timing
+Over recommended operating conditions.
+Table 4.17. sysDSP Timing
+Parameter
+
+Description
+
+Min
+
+Max
+
+Unit
+
+fMAX8x8SMULT
+
+Max frequency signed MULT8x8 bypassing pipeline register
+
+—
+
+50
+
+MHz
+
+fMAX16x16SMULT
+
+Max frequency signed MULT16x16 bypassing pipeline register
+
+—
+
+50
+
+MHz
+
+4.21. SPRAM Timing
+Over recommended operating conditions.
+Table 4.18. Single Port RAM Timing
+Parameter
+
+Description
+
+Min
+
+Max
+
+Unit
+
+fMAXSRAM
+
+Max frequency SPRAM (4/8/16-bit Read and Write)
+
+70
+
+—
+
+MHz
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+35
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+4.22. Derating Logic Timing
+Logic timing data provided in the following sections of the data sheet using Lattice design tools are worst case numbers
+in the operating range. Actual delays can be much faster. Lattice design tools can provide logic timing numbers at a
+particular temperature and voltage.
+
+4.23. Maximum sysI/O Buffer Performance
+Table 4.19. Maximum sysI/O Buffer Performance
+I/O Standard
+
+Max Speed
+
+Unit
+
+LVCMOS33
+
+250
+
+MHz
+
+LVCMOS25
+
+250
+
+MHz
+
+LVCMOS18
+
+250
+
+MHz
+
+LVCMOS33
+
+250
+
+MHz
+
+LVCMOS25
+
+250
+
+MHz
+
+LVCMOS18
+
+155
+
+MHz
+
+LVCMOS12
+
+70
+
+MHz
+
+Timing (Typ)
+
+Units
+
+0.18
+
+ns
+
+Inputs
+
+Outputs
+
+Note:
+1. Measured with a toggling pattern.
+
+4.24. iCE40 UltraPlus Family Timing Adders
+Over recommended commercial operating conditions.
+Table 4.20. iCE40 UltraPlus Family Timing Adders
+Buffer Type
+
+Description
+
+Input Adjusters
+LVCMOS33
+
+LVCMOS, VCCIO = 3.3 V
+
+LVCMOS25
+
+LVCMOS, VCCIO = 2.5 V
+
+0
+
+ns
+
+LVCMOS18
+
+LVCMOS, VCCIO = 1.8 V
+
+0.19
+
+ns
+
+LVCMOS33
+
+LVCMOS, VCCIO = 3.3 V
+
+–0.12
+
+ns
+
+LVCMOS25
+
+LVCMOS, VCCIO = 2.5 V
+
+0
+
+ns
+
+LVCMOS18
+
+LVCMOS, VCCIO = 1.8 V
+
+1.32
+
+ns
+
+LVCMOS12
+
+LVCMOS, VCCIO = 1.2 V
+
+5.38
+
+ns
+
+Output Adjusters
+
+Notes:
+•
+Timing adders are relative to LVCMOS25 and characterized but not tested on every device.
+•
+LVCMOS timing measured with the load specified in the Switching Test Conditions table (Table 4.26).
+•
+Commercial timing numbers are shown.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+36
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+4.25. iCE40 UltraPlus External Switching Characteristics
+Over recommended commercial operating conditions.
+Table 4.21. iCE40 UltraPlus External Switching Characteristics
+Parameter
+
+Description
+
+Device
+
+Clocks
+Global Clock
+fMAX_GBUF
+Frequency for Global Buffer Clock Network
+All Devices
+tW_GBUF
+Clock Pulse Width for Global Buffer
+All Devices
+tISKEW_GBUF
+Global Buffer Clock Skew within a Device
+All Devices
+Pin-LUT-Pin Propagation Delay
+Best Case Propagation Delay through One
+tPD
+All Devices
+LUT Logic
+General I/O Pin Parameters (Using Global Buffer Clock without PLL)1
+tSKEW_IO
+Data Bus Skew across a Bank of IOs
+All Devices
+tCO
+Clock to Output – PIO Output Register
+All Devices
+tSU
+Clock to Data Setup – PIO Input Register
+All Devices
+tH
+Clock to Data Hold – PIO Input Register
+All Devices
+General I/O Pin Parameters (Using Global Buffer Clock with PLL)
+tCOPLL
+Clock to Output – PIO Output Register
+All Devices
+tSUPLL
+Clock to Data Setup – PIO Input Register
+All Devices
+tHPLL
+Clock to Data Hold – PIO Input Register
+All Devices
+Note:
+1. All the data is from the worst cases.
+
+Min
+
+Max
+
+Unit
+
+—
+2
+—
+
+185
+—
+530
+
+MHz
+ns
+ps
+
+—
+
+9.0
+
+ns
+
+—
+—
+−0.5
+5.55
+
+510
+10.0
+—
+—
+
+ps
+ns
+ns
+ns
+
+—
+7.3
+−1.1
+
+2.4
+—
+—
+
+ns
+ns
+ns
+
+4.26. sysCLOCK PLL Timing
+Over recommended operating conditions.
+Table 4.22. sysCLOCK PLL Timing
+Parameter
+
+Descriptions
+
+Conditions
+
+Min
+
+Max
+
+Unit
+
+fIN
+
+Input Clock Frequency (REFERENCECLK,
+EXTFEEDBACK)
+
+—
+
+10
+
+133
+
+MHz
+
+fOUT
+
+Output Clock Frequency (PLLOUT)
+
+—
+
+16
+
+275
+
+MHz
+
+fVCO
+fPFD3
+
+PLL VCO Frequency
+Phase Detector Input Frequency
+
+—
+—
+
+533
+10
+
+1,066
+133
+
+MHz
+MHz
+
+—
+—
+
+40
+—
+
+60
+±12
+
+%
+deg
+
+Output Clock Period Jitter
+
+fOUT >= 100 MHz
+fOUT < 100 MHz
+
+—
+—
+
+450
+0.05
+
+ps p-p
+UIPP
+
+Output Clock Cycle-to-Cycle Jitter
+
+fOUT >= 100 MHz
+fOUT < 100 MHz
+
+—
+—
+
+750
+0.10
+
+ps p-p
+UIPP
+
+fPFD >= 25 MHz
+
+—
+
+275
+
+ps p-p
+
+fPFD < 25 MHz
+
+—
+
+0.05
+
+UIPP
+
+AC Characteristics
+tDT
+Output Clock Duty Cycle
+tPH
+Output Phase Accuracy
+
+tOPJIT1, 5, 6
+
+Output Clock Phase Jitter
+tW
+
+Output Clock Pulse Width
+
+At 90% or 10%
+
+1.33
+
+—
+
+ns
+
+tLOCK2, 3
+tUNLOCK
+
+PLL Lock-in Time
+PLL Unlock Time
+
+—
+—
+
+—
+—
+
+50
+50
+
+µs
+ns
+
+tIPJIT4
+
+Input Clock Period Jitter
+
+fPFD ≥ 20 MHz
+fPFD < 20 MHz
+
+—
+—
+
+1,000
+0.02
+
+ps p-p
+UIPP
+
+tSTABLE3
+
+LATCHINPUTVALUE LOW to PLL Stable
+
+—
+
+—
+
+500
+
+ns
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+37
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Parameter
+
+Descriptions
+
+Conditions
+
+Min
+
+Max
+
+Unit
+
+tSTABLE_PW3
+tRST
+
+LATCHINPUTVALUE Pulse Width
+RESET Pulse Width
+
+—
+—
+
+100
+10
+
+—
+—
+
+ns
+ns
+
+tRSTREC
+tDYNAMIC_WD
+
+RESET Recovery Time
+DYNAMICDELAY Pulse Width
+
+—
+—
+
+10
+100
+
+—
+—
+
+µs
+VCO Cycles
+
+Notes:
+1. Period jitter sample is taken over 10,000 samples of the primary PLL output with a clean reference clock. Cycle-to-cycle jitter is
+taken over 1,000 cycles. Phase jitter is taken over 2,000 cycles. All values are per JESD65B.
+2. Output clock is valid after tLOCK for PLL reset and dynamic delay adjustment.
+3. At minimum fPFD. As the fPFD increases the time decreases to approximately 60% of the value listed.
+4. Maximum limit to prevent PLL unlock from occurring. Does not imply the PLL operates within the output specifications listed in
+this table.
+5. The jitter values increases with loading of the PLD fabric and in the presence of SSO noise.
+
+4.27. SPI Master or NVCM Configuration Time
+Table 4.23. SPI Master or NVCM Configuration Time1, 2
+Symbol
+
+Parameter
+
+tCONFIG
+
+POR/CRESET_B to Device I/O Active
+
+Conditions
+
+Max
+
+Unit
+
+All devices – Low Frequency (Default)
+
+140
+
+ms
+
+All devices – Medium frequency
+
+50
+
+ms
+
+All devices – High frequency3
+
+—
+
+—
+
+Notes:
+1. Assumes sysMEM Block is initialized to an all zero pattern if they are used.
+2. The NVCM download time is measured with a fast ramp rate starting from the maximum voltage of POR trip point.
+3. High frequency is supported only on SPI Master.
+
+4.28. sysCONFIG Port Timing Specifications
+Over recommended operating conditions.
+Table 4.24. sysCONFIG Port Timing Specifications
+Symbol
+
+Parameter
+
+Conditions
+
+Min
+
+Typ
+
+Max
+
+Unit
+
+All Configuration Mode
+tCRESET_B
+
+Minimum CRESET_B LOW pulse width
+required to restart configuration, from
+falling edge to rising edge.
+
+—
+
+200
+
+—
+
+—
+
+ns
+
+tDONE_IO
+
+Number of configuration clock cycles after
+CDONE goes HIGH before the PIO pins are
+activated.
+
+—
+
+49
+
+—
+
+—
+
+Clock
+Cycles
+
+tCR_SCK
+
+Minimum time from a rising edge on
+CRESET_B until the first SPI WRITE
+operation, first SPI_SCK clock. During this
+time, the iCE40 UltraPlus device is clearing
+its internal configuration memory.
+
+—
+
+1,200
+
+—
+
+—
+
+µs
+
+fMAX
+
+CCLK Clock Frequency
+
+tCCLKH
+tCCLKL
+
+Slave SPI
+
+Write
+
+1
+
+—
+
+25
+
+MHz
+
+Read1
+
+—
+
+15
+
+—
+
+MHz
+
+CCLK Clock Pulsewidth HIGH
+
+—
+
+20
+
+—
+
+—
+
+ns
+
+CCLK Clock Pulsewidth LOW
+
+—
+
+20
+
+—
+
+—
+
+ns
+
+tSTSU
+
+CCLK Setup Time
+
+—
+
+12
+
+—
+
+—
+
+ns
+
+tSTH
+
+CCLK Hold Time
+
+—
+
+12
+
+—
+
+—
+
+ns
+
+tSTCO
+
+CCLK Falling Edge to Valid Output
+
+—
+
+13
+
+—
+
+—
+
+ns
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+38
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Symbol
+
+Parameter
+
+Conditions
+
+Min
+
+Typ
+
+Max
+
+Unit
+
+7.0
+
+12.0
+
+17.0
+
+MHz
+
+MCLK Clock Frequency
+
+Low Frequency
+(Default)
+Medium Frequency2
+
+21.0
+
+33.0
+
+45.0
+
+MHz
+
+High Frequency2
+
+33.0
+
+53.0
+
+71.0
+
+MHz
+
+Master SPI3
+fMCLK
+tMCLK
+
+CRESET_B HIGH to First MCLK Edge
+
+—
+
+1,200
+
+—
+
+—
+
+µs
+
+tSU
+
+CCLK Setup Time
+
+—
+
+6.16
+
+—
+
+—
+
+ns
+
+tHD
+
+CCLK Hold Time
+
+—
+
+1
+
+—
+
+—
+
+ns
+
+Notes:
+1. Supported with 1.2 V VCC and at 25 °C.
+2. Extended range fMAX Write operations support up to 53 MHz with 1.2 V VCC and at 25 °C.
+3. tSU and tHD timing must be met for all MCLK frequency choices.
+
+4.29. RGB LED Drive
+Table 4.25. RGB LED
+Symbol
+
+Parameter
+
+Min
+
+Max
+
+Unit
+
+ILED_ACCURACY
+
+RGB0, RGB1, RGB2 Sink Current Accuracy to selected current @ VLEDOUT >= 0.5 V
+RGB0, RGB1, RGB2 Sink Current Matching among the 3 outputs @ VLEDOUT >= 0.5
+V
+
+–12
+
++12
+
+%
+
+–5
+
++5
+
+%
+
+ILED_MATCH
+
+4.30. Switching Test Conditions
+Figure 4.3 shows the output test load that is used for AC testing. The specific values for resistance, capacitance,
+voltage, and other test conditions are listed in Table 4.26.
+VT
+R1
+Test Point
+
+DUT
+CL
+
+Figure 4.3. Output Test Load, LVCMOS Standards
+Table 4.26. Test Fixture Required Components, Non-Terminated Interfaces
+Test Condition
+
+R1
+
+CL
+
+LVCMOS settings (L ≥ H, H ≥ L)
+
+∞
+
+0 pF
+
+Timing Reference
+
+VT
+
+LVCMOS 3.3 = 1.5 V
+
+—
+
+LVCMOS 2.5 = VCCIO/2
+
+—
+
+LVCMOS 1.8 = VCCIO/2
+
+—
+
+LVCMOS 3.3 (Z ≥ H)
+
+1.5 V
+
+VOL
+
+LVCMOS 3.3 (Z ≥ L)
+
+1.5 V
+
+VOH
+
+Other LVCMOS (Z ≥ H)
+
+VCCIO/2
+
+VOL
+
+Other LVCMOS (Z ≥ L)
+
+188
+
+0 pF
+
+VCCIO/2
+
+VOH
+
+LVCMOS (H ≥ Z)
+
+VOH – 0.15 V
+
+VOL
+
+LVCMOS (L ≥ Z)
+
+VOL – 0.15 V
+
+VOH
+
+Note:
+1. Output test conditions for all other interfaces are determined by the respective standards.
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+39
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+5. Pinout Information
+5.1. Signal Descriptions
+5.1.1. Power Supply Pins
+Signal Name
+VCC
+
+Function
+Power
+
+I/O
+—
+
+Description
+Core Power Supply
+
+VCCIO_0, SPI_VCCIO1, VCCIO_2
+VPP_2V5
+VCCPLL
+
+Power
+Power
+Power
+
+—
+—
+—
+
+Power for I/Os in Bank 0, 1, and 2
+Power for NVCM programming and operations
+Power for PLL
+
+GND
+GND_LED
+
+GROUND
+GROUND
+
+—
+—
+
+Ground
+Ground for LED drivers. Should connect to GND on board.
+
+5.1.2. Configuration Pins
+Signal Name
+General I/O
+
+Shared
+Function
+
+CRESET_B
+
+—
+
+IOB_xxx
+
+Function
+
+I/O
+
+Description
+
+Configuration
+
+I
+
+Configuration Reset, active LOW. No internal pull-up resistor.
+Either actively driven externally or connect a 10 kΩ pull-up to
+SPI_VCCIO1.
+
+Configuration
+
+I/O
+
+Configuration Done. Includes a weak pull-up resistor to
+SPI_VCCIO1.
+
+I/O
+
+In user mode, after configuration, this pin can be programmed
+as general I/O in user function. In 30-pin WLCSP, this pin
+connects to IOB_12a, which also is shared as global signal G4
+in user mode.
+
+CDONE
+General I/O
+
+5.1.3. Configuration SPI Pins
+Signal Name
+General I/O
+
+IOB_34a
+
+IOB_32a
+
+Shared
+Function
+
+Function
+
+I/O
+
+Configuration
+
+I/O
+
+General I/O
+
+I/O
+
+Configuration
+
+Output
+
+General I/O
+
+I/O
+
+SPI_SCK
+
+SPI_SO
+
+Description
+This pin is shared with device configuration. During configuration:
+In Master SPI mode, this pin outputs the clock to external SPI
+memory.
+In Slave SPI mode, this pin inputs the clock from external
+processor.
+In user mode, after configuration, this pin can be programmed as
+general I/O in user function.
+This pin is shared with device configuration. During configuration:
+In Master SPI mode, this pin outputs the command data to the
+external SPI memory.
+In Slave SPI mode, this pin connects to the MISO pin of the
+external processor.
+In user mode, after configuration, this pin can be programmed as
+general I/O in user function.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+40
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Signal Name
+General I/O
+
+IOB_33b
+
+IOB_35b
+
+Shared
+Function
+
+Function
+
+I/O
+
+Configuration
+
+Input
+
+General I/O
+
+I/O
+
+Configuration
+
+I/O
+
+General I/O
+
+I/O
+
+SPI_SI
+
+SPI_SS
+
+Description
+This pin is shared with device configuration. During configuration:
+In Master SPI mode, this pin receives data from external SPI
+memory.
+In Slave SPI mode, this pin connects to the MOSI pin of the
+external processor.
+In user mode, after configuration, this pin can be programmed as
+general I/O in user function.
+This pin is shared with device configuration. During configuration:
+In Master SPI mode, this pin outputs to the external SPI memory.
+In Slave SPI mode, this pin inputs CSN from the external
+processor.
+In user mode, after configuration, this pin can be programmed as
+general I/O in user function.
+
+5.1.4. Global Pins
+Signal Name
+General I/O
+
+IOT_46b
+
+IOT_45a
+
+IOB_25b
+
+IOB_12a
+
+IOB_11b
+
+IOB_3b
+
+Shared
+Function
+
+Function
+
+I/O
+
+General I/O
+
+I/O
+
+Global
+
+Input
+
+General I/O
+
+I/O
+
+Global
+
+Input
+
+General I/O
+
+I/O
+
+Global
+
+Input
+
+General I/O
+
+I/O
+
+Global
+
+Input
+
+General I/O
+
+I/O
+
+Global
+
+Input
+
+General I/O
+
+I/O
+
+Global
+
+Input
+
+G0
+
+G1
+
+G3
+
+G4
+
+G5
+
+G6
+
+Description
+In user mode, after configuration, this pin can be
+programmed as general I/O in user function.
+Global input used for high fanout, or clock/reset net. The
+G0 pin drives the GBUF0 global buffer.
+In user mode, after configuration, this pin can be
+programmed as general I/O in user function.
+Global input used for high fanout, or clock/reset net. The
+G1 pin drives the GBUF1 global buffer.
+In user mode, after configuration, this pin can be
+programmed as general I/O in user function.
+Global input used for high fanout, or clock/reset net. The
+G3 pin drives the GBUF3 global buffer.
+In user mode, after configuration, this pin can be
+programmed as general I/O in user function.
+Global input used for high fanout, or clock/reset net. The
+G4 pin drives the GBUF4 global buffer.
+In user mode, after configuration, this pin can be
+programmed as general I/O in user function.
+Global input used for high fanout, or clock/reset net. The
+G5 pin drives the GBUF5 global buffer.
+In user mode, after configuration, this pin can be
+programmed as general I/O in user function.
+Global input used for high fanout, or clock/reset net. The
+G6 pin drives the GBUF6 global buffer.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+41
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+5.1.5. General I/O, LED Pins
+Signal Name
+General I/O
+
+RGB0
+
+RGB1
+
+RGB2
+
+Shared Function
+
+Function
+
+I/O
+
+Description
+
+General I/O
+
+Open-Drain
+I/O
+
+LED
+
+Open-Drain
+Output
+
+General I/O
+
+Open-Drain
+I/O
+
+LED
+
+Open-Drain
+Output
+
+General I/O
+
+Open-Drain
+I/O
+
+LED
+
+Open-Drain
+Output
+
+In user mode, when RGB function is not used, this pin can
+be connected to any user logic and used as open-drain I/O.
+This pin is located in Bank 0.
+In user mode, when using RGB function, this pin can be
+programmed as an open-drain 24 mA output to drive the
+external LED.
+In user mode, when RGB function is not used, this pin can
+be connected to any user logic and used as open-drain I/O.
+This pin is located in Bank 0.
+In user mode, when using RGB function, this pin can be
+programmed as an open-drain 24 mA output to drive the
+external LED.
+In user mode, when RGB function is not used, this pin can
+be connected to any user logic and used as open-drain I/O.
+This pin is located in Bank 0.
+In user mode, when using RGB function, this pin can be
+programmed as an open-drain 24 mA output to drive the
+external LED.
+In user mode, with the user's choice, this pin can be
+programmed as I/O in user function in the top (xx = I/O
+location). These pins are located in Bank 0.
+In user mode, with the user's choice, this pin can be
+programmed as I/O in user function in the bottom (xx = I/O
+location). Pins with xx <= 9 are located in Bank 2, pins with
+xx> are located in Bank 1.
+
+—
+
+—
+
+—
+
+PIOT_xx
+
+—
+
+General I/O
+
+I/O
+
+PIOB_xx
+
+—
+
+General I/O
+
+I/O
+
+5.2. Pin Information Summary
+iCE40UP3K
+UWG30
+
+UWG30
+
+SG48
+
+Bank 0
+Bank 1
+
+7
+10
+
+7
+10
+
+17
+14
+
+Bank 2
+
+4
+21
+2
+
+4
+21
+2
+
+8
+39
+6
+
+5
+1
+8
+
+5
+1
+8
+
+4
+3
+13
+
+1
+1
+
+1
+1
+
+2
+1
+
+VCCPLL
+
+1
+1
+1
+
+1
+1
+1
+
+1
+1
+1
+
+VPP_2V5
+Dedicated Config Pins
+
+1
+1
+
+1
+1
+
+1
+2
+
+2
+30
+
+0*
+48
+
+Pin Type
+General Purpose I/O Per
+Bank
+Total General Purpose I/Os
+Differential
+Input/Output Pairs
+
+Bank 0
+Bank 1
+Bank 2
+
+Total Differential I/O Pair
+VCC
+Bank 0
+VCCIO
+
+Bank 1
+Bank 2
+
+GND
+2
+Total Balls
+30
+Note:
+1. 48-pin QFN package (SG48) requires the package paddle to be connected to GND.
+
+iCE40UP5K
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+42
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+5.3. iCE40UP Part Number Description
+i C E40 UP XX - XX XX XI T R
+Device Family
+iCE40UP FPGA
+
+TR
+<blank> = Default Tape and Reel
+for SG48 (See quantity below)
+TR = Tape and Reel (See quantity below)
+TR50 = Tape and Reel, 50 units
+TR1K = Tape and Reel, 1,000 units
+
+Logic Cells
+3K = 2,800 Logic Cells
+5K = 5,280 Logic Cells
+
+Grade
+I = Industrial
+Package
+UWG30 = 30-Ball WLCSP (0.40 mm Ball Pitch)
+SG48 = 48-Pin QFN (0.50 mm Pin Pitch)
+
+All parts are shipped in tape-and-reel.
+
+5.3.1. Tape and Reel Quantity
+Package
+UWG30
+SG48
+
+TR Quantity
+5,000
+2,000
+
+5.4. Ordering Part Numbers
+5.4.1. Industrial
+Part Number
+
+LUTs
+
+Supply Voltage
+
+Package
+
+Pins
+
+Temperature
+
+iCE40UP3K-UWG30ITR
+iCE40UP3K-UWG30ITR1K
+
+2800
+2800
+
+1.2 V
+1.2 V
+
+Halogen-Free WLCSP
+Halogen-Free WLCSP
+
+30
+30
+
+IND
+IND
+
+iCE40UP3K-UWG30ITR50
+iCE40UP5K-SG48I
+iCE40UP5K-SG48ITR50
+
+2800
+5280
+5280
+
+1.2 V
+1.2 V
+1.2 V
+
+Halogen-Free WLCSP
+Halogen-Free QFN
+Halogen-Free QFN
+
+30
+48
+48
+
+IND
+IND
+IND
+
+iCE40UP5K-UWG30ITR
+iCE40UP5K-UWG30ITR1K
+
+5280
+5280
+
+1.2 V
+1.2 V
+
+Halogen-Free WLCSP
+Halogen-Free WLCSP
+
+30
+30
+
+IND
+IND
+
+iCE40UP5K-UWG30ITR50
+
+5280
+
+1.2 V
+
+Halogen-Free WLCSP
+
+30
+
+IND
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+43
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Supplemental Information
+For Further Information
+A variety of technical documents for the iCE40 UltraPlus family are available on the Lattice web site.
+• iCE40 Programming and Configuration (FPGA-TN-02001)
+• iCE40 SPI/I2C Hardened IP Usage Guide (FPGA-TN-02010)
+• Advanced iCE40 SPI/I2C Hardened IP Usage Guide (FPGA-TN-02011)
+• Memory Usage Guide for iCE40 Devices (FPGA-TN-02002)
+• iCE40 sysCLOCK PLL Design and Usage Guide (FPGA-TN-02052)
+• iCE40 Hardware Checklist (FPGA-TN-02006)
+• iCE40 LED Driver Usage Guide (FPGA-TN-02021)
+• DSP Function Usage Guide for iCE40 Devices (FPGA-TN-02007)
+• iCE40 Oscillator Usage Guide (FPGA-TN-02008)
+• iCE40 SPRAM Usage Guide (FPGA-TN-02022)
+• iCE40 UltraPlus Pinout Files
+• iCE40 UltraPlus Pin Migration Files
+• Thermal Management (FPGA-TN-02044)
+• Package Diagrams (FPGA-DS-02053)
+• Lattice design tools
+• iCE40 UltraPlus FPGA webpage
+• Lattice Insights for Lattice Semiconductor training courses and learning plans
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+44
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Technical Support Assistance
+For assistance, submit a technical support case at www.latticesemi.com/techsupport.
+For frequently asked questions, refer to the Lattice Answer Database at
+www.latticesemi.com/Support/AnswerDatabase.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+45
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Revision History
+Revision 2.4, February 2025
+Section
+All
+Abbreviations in This Document
+Architecture Overview
+
+DC and Switching Characteristics
+
+Change Summary
+Minor editorial fixes.
+Replaced Acronyms with Abbreviations.
+•
+
+Updated the Supported Standard subsection under sysI/O Buffer section.
+•
+Added the LVCMOS 1.2 V to this statement: The buffer supports input/output 1.8
+V, 2.5 V, and 3.3 V standards, and LVCMOS 1.2 V standard output only.
+•
+Added LVCMOS12 in Table 3.10. Supported Output Standards.
+Updated the min value of VCCIO from 1.7 V to 1.20 V.
+
+Revision 2.3, October 2023
+Section
+Disclaimer
+Supplemental Information
+
+Change Summary
+Updated this section.
+Added links for Lattice Insights webpage and iCE40 UltraPlus FPGA webpage.
+
+Revision 2.2, July 2023
+Section
+Architecture
+
+Pin Information Summary
+
+Change Summary
+In Differential Comparators of the sysI/O Buffer section:
+•
+changed See the Pin Information Summary section to locate the corresponding paired
+I/Os with differential comparators to Refer to the Pin Information Summary section for
+the number of paired I/Os available in each bank to implement differential comparators;
+•
+newly added Refer to the device pinout file from the Lattice website for exact pin
+locations.
+Newly added the data of Differential Input/Output Pairs.
+
+Revision 2.1, April 2023
+Section
+DC and Switching Characteristics
+
+Supplemental Information
+Technical Support Assistance
+
+Change Summary
+In Power-up Supply Sequence section, added Note “To check the VSUPPLY(MIN) shown in Figure
+4.1, please refer to the minimum recommended operation conditions in Recommended
+Operating Conditions section.”
+Added links for iCE40 UltraPlus Pinout Files and iCE40 UltraPlus Pin Migration Files in
+Supplemental Information section.
+Added FAQ website link in Technical Support Assistance section.
+
+Revision 2.0, August 2021
+Section
+DC and Switching Characteristics
+
+Change Summary
+Updated units in Table 4.5. DC Electrical Characteristics
+
+Revision 1.9, December 2020
+Section
+DC and Switching Characteristics
+—
+
+Change Summary
+•
+Updated values in Table 4.17. sysDSP Timing.
+•
+Updated footnotes in Table 4.23. SPI Master or NVCM Configuration Time1, 2.
+Minor style adjustments
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+46
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Revision 1.8, August 2020
+Section
+Architecture
+
+Supplemental Information
+
+Change Summary
+•
+
+Removed paragraph regarding SCLK and SDI inputs from sysCLOCK Phase Locked Loops
+(PLLs) section.
+•
+Updated linked reference.
+•
+Modified Figure 3.3. PLL Diagram.
+Updated document ID of sysCLOCK PLL Design and Usage Guide in For Further Information
+section.
+
+Revision 1.7, February 2020
+Section
+Disclaimers
+
+Change Summary
+Added this section.
+
+Revision 1.6, November 2018
+Section
+General Description
+Product Family
+
+Change Summary
+Corrected product dimensions from 2.15 mm × 2.55 mm to 2.11 mm × 2.54 mm.
+
+Revision 1.5, August 2018
+Section
+All
+DC and Switching Characteristics
+
+Change Summary
+Removed Copyright page.
+Updated sysCONFIG Port Timing Specifications section. Updated tCR_SCK parameter in Table
+4.24.
+
+Pinout Information
+
+•
+Updated Configuration SPI Pins section.
+•
+Updated secondary signal name from SPI_SS_B to SPI_SS.
+Updated iCE40 Programming and Configuration document number.
+
+Supplemental Information
+
+Revision 1.4, August 2017
+Section
+All
+
+Change Summary
+•
+•
+
+Changed document number from DS1056 to FPGA-DS-02008.
+Removed Preliminary from document cover page and header.
+
+Revision 1.3, August 2017
+Section
+All
+
+Change Summary
+•
+•
+
+Changed document status from Advance to Preliminary.
+Updated footer.
+
+Architecture
+
+•
+•
+
+Corrected link to iCE40 LED Driver Usage Guide (TN1288).
+Added link to iCE40 SPRAM Usage Guide (TN1314).
+
+DC and Switching Characteristics
+
+•
+
+•
+
+Updated Typ VCC=1.2 V values for IPP_2VSPEAK and ICOOPEAK in Table 4.6. Supply
+Current.
+Added Min value for fMAXSRAM to Table 4.18. Single Port RAM Timing.
+Added LVCMOS12 information to Table 4.19. Maximum sysI/O Buffer Performance and
+Table 4.20. iCE40 UltraPlus Family Timing Adders.
+Updated Table 4.21. iCE40 UltraPlus External Switching Characteristics. Revised Max
+values for tISKEW_GBUF, tSKEW_IO, tCO, tCOPLL, and Min values for tSUPLL, tHPLL.
+Added Max values to Table 4.23. SPI Master or NVCM Configuration Time.
+
+•
+•
+
+Updated TR description in the iCE40UP Part Number Description section.
+Updated part number information in the Ordering Part Numbers section.
+
+•
+•
+•
+
+Pinout Information
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+47
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Section
+Supplemental Information
+
+Change Summary
+•
+•
+•
+
+Corrected link to iCE40 LED Driver Usage Guide (TN1288).
+Added link to iCE40 SPRAM Usage Guide (TN1314).
+Added link to Package Diagrams.
+
+Revision 1.2, June 2016
+Section
+All
+Introduction
+Product Family
+
+Change Summary
+Updated template.
+Added QFN package in features list.
+•
+•
+
+Added packages to Table 2.1. iCE40 UltraPlus Family Selection Guide.
+Added information on RGB PWM IP in Overview.
+
+Architecture
+
+•
+•
+•
+
+Performed minor editorial changes.
+Added information on 256 kb SPRAM blocks.
+Changed headings in Table 3.2. Global Buffer (GBUF) Connections to Programmable
+Logic Blocks.
+Corrected VCCPLL format in Figure 3.3. PLL Diagram.
+Updated note in Table 3.4. sysMEM Block Configurations.
+Added reference to iCE40 SPRAM Usage Guide (TN1314).
+Revised sysI/O Buffer Banks information.
+Corrected VCCIO format in Figure 3.9. I/O Bank and Programmable I/O Cell.
+Revised Typical I/O Behavior During Power-up information.
+Revised Supported Standards information.
+Revised heading in Table 3.9. Supported Input Standards.
+Revised heading and removed LVCMOS12 in Table 3.10Table 3.10. Supported Output
+Standards.
+Revised HFOSC information in On-Chip Oscillator section.
+Removed "An RGB PWM IP is also offered in the family." in RGB High Current Drive I/O
+Pins section.
+
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+DC and Switching Characteristics
+
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+
+Added the following figures:
+Figure 4.1. Power Up Sequence with SPE_VCCIO1 and VPP_2V5 Not Connected
+Together.
+Figure 4.2. Power Up Sequence with All Supplies Connected Together to 1.8 V.
+Updated note in Table 4.5. DC Electrical Characteristics.
+Added note in Table 4.6. Supply Current.
+Revised User SPI Specifications 1, 2 section.
+Removed symbols.
+Added notes.
+Revised Table 4.11. Internal Oscillators (HFOSC, LFOSC).
+Removed note in Table 4.13. sysI/O Single-Ended DC Electrical Characteristics.
+Changed to Lattice Design Software tool in Table 4.15. Pin-to-Pin Performance
+(LVCMOS25).
+Changed to Lattice Design Software tool and revised note in Table 4.16. Register-toRegister Performance.
+Added sysDSP Timing section.
+Added SPRAM Timing section.
+Removed LVCMOS12 and added timing values in Table 4.19. Maximum I/O Buffer
+Performance.
+Removed LVCMOS12 and added timing values in Table 4.20. iCE40 UltraPlus Family
+Timing Adders.
+Revised max values in Table 4.23. SPI Master or NVCM Configuration Time.
+Removed TBD conditions in Table 4.24. sysCONFIG Port Timing Specifications. Revised
+tHD parameter.
+Revised Table 4.25. High Current RGB LED and IR LED Drive.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+48
+
+iCE40 UltraPlus Family Data Sheet
+Data Sheet
+
+Section
+Pinout Information
+
+Supplemental Information
+
+Change Summary
+•
+General update to Signal Descriptions section.
+•
+Updated the iCE40UP Part Number Description section. Added FGW49 package.
+•
+Added OPNs.
+Added reference to FPGA-TN-02022, iCE40 SPRAM Usage Guide .
+
+Revision 1.1, September 2015
+Section
+Architecture
+Pinout Information
+
+Ordering Information
+
+Further Information
+
+Change Summary
+Updated Architecture section. Replaced iCE5UP with iCE40UP.
+Updated Pin Information section.
+•
+Replaced iCE5UP with iCE40UP.
+•
+Replaced SWG30 with UWG30.
+Updated iCE40UP Part Number Description section.
+•
+Replaced iCE5UP with iCE40UP.
+•
+Replaced SWG30 with UWG30.
+Updated Ordering Part Numbers section. Replaced the table of part
+Removed reference to Schematic Symbols.
+
+Revision 1.0, August 2015
+Section
+All
+
+Change Summary
+Initial release.
+
+© 2018-2025 Lattice Semiconductor Corp. All Lattice trademarks, registered trademarks, patents, and disclaimers are as listed at www.latticesemi.com/legal.
+All other brand or product names are trademarks or registered trademarks of their respective holders. The specifications and information herein are subject to change without notice.
+
+FPGA-DS-02008-2.4
+
+49
+
+www.latticesemi.com
+
+
