@@ -1,12 +1,21 @@
 # pico-ice Arduino-Pico CRAM Programmer (PlatformIO)
 
-This project programs the iCE40UP5K FPGA on the pico-ice board using the Arduino-Pico core (Earle Philhower) and bit-banged SPI from the RP2040. It mirrors the pico-ice-sdk CRAM sequence and checks CDONE to confirm configuration. No post-load verification is performed; the sysCONFIG bus is released after configuration.
+This project programs the iCE40UP5K FPGA on the pico-ice board using the Arduino-Pico core (Earle Philhower). It mirrors the pico-ice-sdk CRAM sequence and checks CDONE to confirm configuration. No post-load verification is performed; the sysCONFIG bus is released after configuration.
+
+## Implementations (Branches)
+- main: Bit-banged SPI implementation (simpler, CPU-driven). External clock via PWM.
+- PIO: Uses RP2040 PIO for SPI and clock (lower CPU load, faster). Includes generated PIO headers so pioasm is optional.
 
 ## Features
 - Load FPGA bitstreams directly from flash (compiled headers)
 - Runtime selection via Serial: blank, traffic light controller, and optional blink
-- External 12 MHz clock output on GPIO24 to drive the FPGA user logic
-- Clean, minimal Arduino-based implementation (no pico-sdk required)
+- FPGA clock on GPIO24
+  - main: PWM at 12 MHz (configurable via `FPGA_CLK_FREQ`)
+  - PIO: jitter-free PIO clock ≈ clk_sys/3 (e.g., ~44 MHz at 133 MHz clk_sys)
+- SPI for CRAM
+  - main: bit-banged
+  - PIO: ~20 MHz SCK using PIO
+- Clean, minimal Arduino-based implementation (no Pico SDK build needed)
 
 ## Hardware Pins (RP2040 ➜ FPGA)
 - GPIO8  = PIN_ICE_SI  (ICE_SI, RP2040 ➜ FPGA)
@@ -15,7 +24,7 @@ This project programs the iCE40UP5K FPGA on the pico-ice board using the Arduino
 - GPIO9  = PIN_ICE_SSN (sysCONFIG SS, active-low)
 - GPIO27 = PIN_FPGA_CRESETN (CRESET_B, active-low)
 - GPIO26 = PIN_FPGA_CDONE (CDONE)
-- GPIO24 = PIN_CLOCK (12 MHz clock to FPGA)
+- GPIO24 = PIN_CLOCK (clock to FPGA)
 - GPIO13/12/15 = LED_R/G/B (active-low)
 
 ## Prerequisites
@@ -37,15 +46,22 @@ This project programs the iCE40UP5K FPGA on the pico-ice board using the Arduino
 
 ## Notes
 - The configuration sequence follows the iCE40UP datasheet and pico-ice-sdk: assert CRESETN, prepare bus, select CRAM, stream bitstream, deassert SS, dummy clocks, wait for CDONE, then release sysCONFIG pins.
-- The external clock is defined as `FPGA_CLK_FREQ` (default 12 MHz) and is started automatically before and after configuration.
-- No read-back/verify is done after loading; many designs repurpose sysCONFIG pins.
+- In the PIO branch, the PIO program drives MOSI+SCK and a dedicated PIO SM generates the FPGA clock. SPI runs ~20 MHz by default (see `CRAM_SPI_HZ`).
+- Generated PIO headers (`include/*.pio.h`) are tracked in the repo. Builds work even without `pioasm` installed.
 
 ## Repository Layout
 - `src/main.cpp` — Arduino sketch that drives CRAM programming
+- `src/pio/` — PIO assembly sources (PIO branch)
+- `include/*.pio.h` — Generated PIO headers (checked-in)
 - `convert_binaries.py` — Converts `.bin` files to C headers in `include/`
 - `scripts/preconvert.py` — PlatformIO pre-build hook to run the converter
+- `scripts/pioasm.py` — Assembles PIO sources and sanitizes headers (PIO branch)
 - `platformio.ini` — PlatformIO environment (Arduino-Pico core)
 - `pico-ice-sdk/` — SDK reference sources (not required to build this sketch)
 
+## Branches
+- `main`: bit-banged SPI, PWM clock.
+- `PIO`: PIO SPI (~20 MHz) and PIO clock; PIO headers committed; build works without `pioasm`.
+
 ## License
-MIT
+MIT License
