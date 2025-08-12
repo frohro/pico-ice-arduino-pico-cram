@@ -3,6 +3,35 @@
 // The sysCONFIG bus is released after configuration; no post-load verification is performed.
 
 #include <Arduino.h>
+#include <hardware/pio.h>
+#include <hardware/clocks.h>
+// PIO header is generated at build time by scripts/pioasm.py
+#if __has_include("syscfg_spi_tx.pio.h")
+#include "syscfg_spi_tx.pio.h"
+#define USE_PIO 1
+#elif __has_include("syscfg_spi_tx.pio.h")
+#define USE_PIO 1
+extern const uint16_t syscfg_spi_tx_program_instructions[];
+extern const struct pio_program syscfg_spi_tx_program;
+extern const char syscfg_spi_tx_program_name[];
+extern const int syscfg_spi_tx_program_length;
+extern const int syscfg_spi_tx_program_origin;
+#else
+#define USE_PIO 0
+#endif
+#if __has_include("clk_out.pio.h")
+#include "clk_out.pio.h"
+#define USE_PIO_CLK 1
+#elif __has_include("clk_out.pio.h")
+#define USE_PIO_CLK 1
+extern const uint16_t clk_out_program_instructions[];
+extern const struct pio_program clk_out_program;
+extern const char clk_out_program_name[];
+extern const int clk_out_program_length;
+extern const int clk_out_program_origin;
+#else
+#define USE_PIO_CLK 0
+#endif
 
 // Include both bitstreams; choose at runtime via serial prompt
 #include "blank_design.h"
@@ -29,6 +58,12 @@ static constexpr uint8_t PIN_CLOCK       = 24; // External clock to FPGA (ICE_CL
 
 // External clock frequency for FPGA user logic
 static constexpr uint32_t FPGA_CLK_FREQ = 12000000; // 12 MHz
+// PIO clock runs at clk_sys/3 when clkdiv=1.0 in clk_out.pio (duty ~33/67)
+// This avoids fractional divider jitter.
+// static constexpr uint32_t FPGA_CLK_PIO_HZ = 48000000; // desired PIO clock to FPGA
+
+// Target SPI SCK for CRAM programming (~20 MHz)
+static constexpr uint32_t CRAM_SPI_HZ = 20000000;
 
 // Helpers for active-low LEDs
 static inline void ledOn(uint8_t pin) { pinMode(pin, OUTPUT); digitalWrite(pin, LOW); }
@@ -42,12 +77,29 @@ static inline void si_write(bool v) { digitalWrite(PIN_ICE_SI, v ? HIGH : LOW); 
 // Manage the external FPGA clock. Safe to call repeatedly; re-applies settings.
 static bool g_clk_running = false;
 static void start_fpga_clock() {
+#if USE_PIO_CLK
+  if (g_clk_running) return;
+  // Use PIO1 for the clock to avoid contention with PIO0 used for SPI
+  PIO pio = pio1;
+  int sm = pio_claim_unused_sm(pio, true);
+  uint off = pio_add_program(pio, &clk_out_program);
+  pio_gpio_init(pio, PIN_CLOCK);
+  pio_sm_config c = clk_out_program_get_default_config(off);
+  sm_config_set_sideset_pins(&c, PIN_CLOCK);
+  // clkdiv = 1.0 => f_out = clk_sys / 3 (from 3 instructions in the loop)
+  sm_config_set_clkdiv(&c, 1.0f);
+  pio_sm_init(pio, sm, off, &c);
+  pio_sm_set_consecutive_pindirs(pio, sm, PIN_CLOCK, 1, true);
+  pio_sm_set_enabled(pio, sm, true);
+  g_clk_running = true;
+#else
   pinMode(PIN_CLOCK, OUTPUT);
   analogWriteRange(2);
   analogWriteFreq(FPGA_CLK_FREQ);
   analogWrite(PIN_CLOCK, 1); // 50% duty (1/2)
-  delayMicroseconds(10); // allow PWM to settle
+  delayMicroseconds(10);
   g_clk_running = true;
+#endif
 }
 
 // Generate N dummy SCLK cycles with SCK while SS is in its current state
@@ -55,17 +107,66 @@ static void clocks(uint32_t count) {
   for (uint32_t i = 0; i < count; ++i) { sck_high(); sck_low(); }
 }
 
-// Write a byte stream to FPGA CRAM via bit-banged SPI (mode 0, MSB first)
-static void bb_write(const uint8_t* data, size_t len) {
-  for (size_t n = 0; n < len; ++n) {
-    uint8_t b = data[n];
-    for (int i = 7; i >= 0; --i) {
-      si_write((b >> i) & 1);
-      sck_high();
-      sck_low();
-    }
-  }
+#if USE_PIO
+// PIO SPI TX engine for sysCONFIG (MOSI+SCK). SS/CRESETN handled in C++.
+static PIO g_pio = pio0;
+static int g_sm = -1;
+static uint g_off = 0;
+
+// Configure and start the PIO SPI TX on given pins and target SCK frequency
+static void syscfg_pio_begin(uint pin_mosi, uint pin_sck, uint32_t sck_hz) {
+  if (g_sm >= 0) return;
+  g_off = pio_add_program(g_pio, &syscfg_spi_tx_program);
+  g_sm = pio_claim_unused_sm(g_pio, true);
+
+  // Route pins to PIO
+  pio_gpio_init(g_pio, pin_mosi);
+  pio_gpio_init(g_pio, pin_sck);
+
+  pio_sm_config c = syscfg_spi_tx_program_get_default_config(g_off);
+  sm_config_set_out_pins(&c, pin_mosi, 1);
+  sm_config_set_sideset_pins(&c, pin_sck);
+  // MSB-first: shift left so MSB is output first
+  sm_config_set_out_shift(&c, /*shift_right=*/false, /*autopull=*/false, /*pull_thresh=*/8);
+
+  // Make pins outputs
+  pio_sm_set_consecutive_pindirs(g_pio, g_sm, pin_mosi, 1, true);
+  pio_sm_set_consecutive_pindirs(g_pio, g_sm, pin_sck, 1, true);
+  pio_sm_set_out_pins(g_pio, g_sm, pin_mosi, 1);
+  pio_sm_set_sideset_pins(g_pio, g_sm, pin_sck);
+
+  float div = (float)clock_get_hz(clk_sys) / (3.0f * (float)sck_hz);
+  if (div < 1.0f) div = 1.0f;
+  sm_config_set_clkdiv(&c, div);
+
+  pio_sm_init(g_pio, g_sm, g_off, &c);
+  pio_sm_set_enabled(g_pio, g_sm, true);
 }
+
+// Send a byte buffer via PIO TX (blocking). Assumes SS already asserted.
+static void syscfg_pio_tx(const uint8_t* data, size_t len) {
+  for (size_t i = 0; i < len; ++i) {
+    // Align byte to MSB so MSB-first shifting outputs correct order
+    pio_sm_put_blocking(g_pio, g_sm, ((uint32_t)data[i]) << 24);
+  }
+  // Wait for FIFO to drain
+  while (!pio_sm_is_tx_fifo_empty(g_pio, g_sm)) { /* wait */ }
+  // Small guard to let last edges complete
+  delayMicroseconds(1);
+}
+
+static void syscfg_pio_end(uint pin_mosi, uint pin_sck) {
+  if (g_sm >= 0) {
+    pio_sm_set_enabled(g_pio, g_sm, false);
+    pio_remove_program(g_pio, &syscfg_spi_tx_program, g_off);
+    pio_sm_unclaim(g_pio, g_sm);
+    g_sm = -1;
+  }
+  // Return pins to GPIO so we can bit-bang dummy clocks
+  pinMode(pin_mosi, OUTPUT); digitalWrite(pin_mosi, LOW);
+  pinMode(pin_sck, OUTPUT);  digitalWrite(pin_sck, LOW);
+}
+#endif
 
 // Enter CRAM configuration mode and prepare to stream a bitstream
 static bool cram_open() {
@@ -109,12 +210,28 @@ static bool cram_open() {
   return true;
 }
 
-// Stream bitstream bytes into CRAM
+#if USE_PIO
+// Write a byte stream to FPGA CRAM via PIO SPI (mode 0, MSB first)
 static bool cram_write(const uint8_t* data, size_t len) {
   if (!data || !len) return false;
-  bb_write(data, len);
+  syscfg_pio_begin(PIN_ICE_SI, PIN_ICE_SCK, CRAM_SPI_HZ);
+  syscfg_pio_tx(data, len);
   return true;
 }
+#else
+// Fallback bit-banged write if PIO header is unavailable
+static bool cram_write(const uint8_t* data, size_t len) {
+  if (!data || !len) return false;
+  for (size_t i = 0; i < len; ++i) {
+    uint8_t b = data[i];
+    for (int bit = 7; bit >= 0; --bit) {
+      si_write((b >> bit) & 1);
+      sck_high(); sck_low();
+    }
+  }
+  return true;
+}
+#endif
 
 // Finalize configuration and confirm CDONE goes high within spec
 static bool cram_close() {
@@ -123,6 +240,11 @@ static bool cram_close() {
   delayMicroseconds(1);
   pinMode(PIN_ICE_SSN, INPUT_PULLUP);
   pinMode(PIN_ICE_SSN, INPUT);
+
+#if USE_PIO
+  // Release PIO so we can drive dummy clocks via GPIO
+  syscfg_pio_end(PIN_ICE_SI, PIN_ICE_SCK);
+#endif
 
   // Output dummy clocks with SI=0 while SS is high. CDONE should go high within 100 SCLKs
   si_write(0);

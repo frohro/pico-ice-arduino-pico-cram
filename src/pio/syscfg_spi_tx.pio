@@ -1,0 +1,14 @@
+.program syscfg_spi_tx
+.side_set 1 opt         ; sideset pin is SCK (idle low), optional sideset
+
+; Transmit bytes MSB-first on MOSI (ICE_SI) with CPOL=0, CPHA=0.
+; CPU controls SS and CRESETN; this PIO only drives MOSI and SCK.
+
+.wrap_target
+    pull       block        ; get next byte
+    set  x, 7               ; 8 bits
+bitloop:
+    out  pins, 1  side 0    ; output MSB while SCK low
+    nop           side 1    ; clock high
+    jmp  x-- bitloop side 0 ; clock low
+.wrap
