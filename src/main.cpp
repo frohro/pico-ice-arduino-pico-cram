@@ -1,6 +1,7 @@
-// Arduino-Pico port to program iCE40 UltraPlus CRAM on pico-ice via bit-banged SPI
+// Arduino-Pico port to program iCE40 UltraPlus CRAM on pico-ice (RP2040) or pico2-ice (RP2350) via bit-banged SPI
 // Steps: hold CRESET low, prep pins, ensure external 12MHz clock, enter CRAM cfg, stream bitstream, close & check CDONE.
 // The sysCONFIG bus is released after configuration; no post-load verification is performed.
+// For pico2-ice, uncomment the next line: #define PICO2_ICE
 
 #include <Arduino.h>
 
@@ -14,9 +15,15 @@
 #define HAVE_BLINK 0
 #endif
 
-// Pin mapping for pico-ice (RP2040)
+// Pin mapping for pico-ice (RP2040) and pico2-ice (RP2350)
+// For pico2-ice, define PICO2_ICE before compiling
+#ifdef PICO2_ICE
+static constexpr uint8_t PIN_ICE_SI     = 11;  // ICE_SI (MOSI from RP2350 to FPGA)
+static constexpr uint8_t PIN_ICE_SO     = 8;   // ICE_SO (MISO from FPGA to RP2350)
+#else
 static constexpr uint8_t PIN_ICE_SI     = 8;   // ICE_SI (MOSI from RP2040 to FPGA)
 static constexpr uint8_t PIN_ICE_SO     = 11;  // ICE_SO (MISO from FPGA to RP2040)
+#endif
 static constexpr uint8_t PIN_ICE_SCK    = 10;  // ICE_SCK
 static constexpr uint8_t PIN_ICE_SSN    = 9;   // ICE_SSN (FPGA sysCONFIG SS, active low)
 static constexpr uint8_t PIN_RAM_SS     = 14;  // External PSRAM SS (keep deasserted)
