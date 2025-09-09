@@ -22,18 +22,24 @@ This project programs the iCE40UP5K FPGA on the pico-ice (RP2040) or pico2-ice (
 For pico-ice (RP2040):
 - GPIO8  = PIN_ICE_SI  (ICE_SI, RP2040 ➜ FPGA)
 - GPIO11 = PIN_ICE_SO  (ICE_SO, FPGA ➜ RP2040)
-
-For pico2-ice (RP2350):
-- GPIO11 = PIN_ICE_SI  (ICE_SI, RP2350 ➜ FPGA)
-- GPIO8  = PIN_ICE_SO  (ICE_SO, FPGA ➜ RP2350)
-
-Common pins:
 - GPIO10 = PIN_ICE_SCK (ICE_SCK)
 - GPIO9  = PIN_ICE_SSN (sysCONFIG SS, active-low)
+- GPIO14 = PIN_RAM_SS  (External PSRAM SS)
 - GPIO27 = PIN_FPGA_CRESETN (CRESET_B, active-low)
 - GPIO26 = PIN_FPGA_CDONE (CDONE)
 - GPIO24 = PIN_CLOCK (clock to FPGA)
 - GPIO13/12/15 = LED_R/G/B (active-low)
+
+For pico2-ice (RP2350):
+- GPIO4  = PIN_ICE_SI  (ICE_SI, RP2350 ➜ FPGA)
+- GPIO7  = PIN_ICE_SO  (ICE_SO, FPGA ➜ RP2350)
+- GPIO6  = PIN_ICE_SCK (ICE_SCK)
+- GPIO5  = PIN_ICE_SSN (sysCONFIG SS, active-low)
+- GPIO8  = PIN_RAM_SS  (External PSRAM SS)
+- GPIO31 = PIN_FPGA_CRESETN (CRESET_B, active-low)
+- GPIO26 = PIN_FPGA_CDONE (CDONE)
+- GPIO21 = PIN_CLOCK (clock to FPGA)
+- GPIO1/0/9 = LED_R/G/B (active-low)
 
 ## Board Selection
 To select the board, choose the appropriate PlatformIO environment:
@@ -47,7 +53,9 @@ The environment automatically sets the correct define (`PICO2_ICE` for pico2-ice
 - A pico-ice or pico2-ice board connected via USB
 
 ## Quick Start
-1. Select your board by choosing the appropriate PlatformIO environment (`env:pico` or `env:pico2`).
+1. Select your board by choosing the appropriate PlatformIO environment:
+   - For pico-ice: Select `env:pico`
+   - For pico2-ice: Select `env:pico2`
 2. Place your bitstreams in the project root as binary files:
    - `traffic_light_controller.bin` (provided)
    - `blank_design.bin` (provided)
