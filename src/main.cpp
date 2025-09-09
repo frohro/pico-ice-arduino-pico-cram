@@ -18,12 +18,20 @@
 // Pin mapping for pico-ice (RP2040) and pico2-ice (RP2350)
 // For pico2-ice, define PICO2_ICE before compiling
 #ifdef PICO2_ICE
-static constexpr uint8_t PIN_ICE_SI     = 11;  // ICE_SI (MOSI from RP2350 to FPGA)
-static constexpr uint8_t PIN_ICE_SO     = 8;   // ICE_SO (MISO from FPGA to RP2350)
+static constexpr uint8_t PIN_ICE_SI     = 4;   // ICE_SI (MOSI from RP2350 to FPGA)
+static constexpr uint8_t PIN_ICE_SO     = 7;   // ICE_SO (MISO from FPGA to RP2350)
+static constexpr uint8_t PIN_ICE_SCK    = 6;   // ICE_SCK
+static constexpr uint8_t PIN_ICE_SSN    = 5;   // ICE_SSN (FPGA sysCONFIG SS, active low)
+static constexpr uint8_t PIN_RAM_SS     = 8;   // External PSRAM SS (keep deasserted)
+static constexpr uint8_t PIN_FPGA_CRESETN = 31; // FPGA CRESET_B (active low)
+static constexpr uint8_t PIN_FPGA_CDONE  = 26; // FPGA CDONE
+static constexpr uint8_t PIN_LED_R       = 1;  // Active-low
+static constexpr uint8_t PIN_LED_G       = 0;  // Active-low
+static constexpr uint8_t PIN_LED_B       = 9;  // Active-low
+static constexpr uint8_t PIN_CLOCK       = 21; // External clock to FPGA (ICE_CLK)
 #else
 static constexpr uint8_t PIN_ICE_SI     = 8;   // ICE_SI (MOSI from RP2040 to FPGA)
 static constexpr uint8_t PIN_ICE_SO     = 11;  // ICE_SO (MISO from FPGA to RP2040)
-#endif
 static constexpr uint8_t PIN_ICE_SCK    = 10;  // ICE_SCK
 static constexpr uint8_t PIN_ICE_SSN    = 9;   // ICE_SSN (FPGA sysCONFIG SS, active low)
 static constexpr uint8_t PIN_RAM_SS     = 14;  // External PSRAM SS (keep deasserted)
@@ -33,6 +41,7 @@ static constexpr uint8_t PIN_LED_R       = 13; // Active-low
 static constexpr uint8_t PIN_LED_G       = 12; // Active-low
 static constexpr uint8_t PIN_LED_B       = 15; // Active-low
 static constexpr uint8_t PIN_CLOCK       = 24; // External clock to FPGA (ICE_CLK)
+#endif
 
 // External clock frequency for FPGA user logic
 static constexpr uint32_t FPGA_CLK_FREQ = 12000000; // 12 MHz
