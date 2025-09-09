@@ -8,8 +8,8 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "/home/frohro/Documents/PlatformIO/Projects/pico-ice-arduino-pico-cram/include",
-                "/home/frohro/Documents/PlatformIO/Projects/pico-ice-arduino-pico-cram/src",
+                "/home/frohro/Classes/Digital_Design/pico-ice-arduino-pico-cram/include",
+                "/home/frohro/Classes/Digital_Design/pico-ice-arduino-pico-cram/src",
                 "/home/frohro/.platformio/packages/framework-arduinopico/cores/rp2040",
                 "/home/frohro/.platformio/packages/framework-arduinopico/cores/rp2040/api/deprecated",
                 "/home/frohro/.platformio/packages/framework-arduinopico/cores/rp2040/api/deprecated-avr-comp",
@@ -150,8 +150,8 @@
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "/home/frohro/Documents/PlatformIO/Projects/pico-ice-arduino-pico-cram/include",
-                    "/home/frohro/Documents/PlatformIO/Projects/pico-ice-arduino-pico-cram/src",
+                    "/home/frohro/Classes/Digital_Design/pico-ice-arduino-pico-cram/include",
+                    "/home/frohro/Classes/Digital_Design/pico-ice-arduino-pico-cram/src",
                     "/home/frohro/.platformio/packages/framework-arduinopico/cores/rp2040",
                     "/home/frohro/.platformio/packages/framework-arduinopico/cores/rp2040/api/deprecated",
                     "/home/frohro/.platformio/packages/framework-arduinopico/cores/rp2040/api/deprecated-avr-comp",
