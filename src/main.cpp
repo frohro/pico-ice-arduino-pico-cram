@@ -437,12 +437,44 @@ void loop() {
     } else if (c == 'l' || c == 'L') {
       (void)configure_fpga({ blink_bin, blink_bin_size, "blink.bin" });
 #endif
+    } else if (c == 'p' || c == 'P') {
+      Serial.println("Programming FPGA with current bitstream...");
+      // Use the bitstream that was chosen at boot
+      BitstreamSel current_bs = choose_bitstream();
+      (void)configure_fpga(current_bs);
+    } else if (c == 'r' || c == 'R') {
+      Serial.println("Resetting FPGA...");
+      // Simple reset by toggling CRESETN
+      digitalWrite(PIN_FPGA_CRESETN, LOW);
+      delayMicroseconds(10);
+      digitalWrite(PIN_FPGA_CRESETN, HIGH);
+    } else if (c == 's' || c == 'S') {
+      Serial.println("FPGA status:");
+      Serial.print("CDONE: ");
+      Serial.println(digitalRead(PIN_FPGA_CDONE) ? "HIGH" : "LOW");
+      Serial.print("CRESETN: ");
+      Serial.println(digitalRead(PIN_FPGA_CRESETN) ? "HIGH" : "LOW");
+      Serial.print("SSN: ");
+      Serial.println(digitalRead(PIN_ICE_SSN) ? "HIGH" : "LOW");
     }
   }
   if (millis() - lastPrint > 2000) {
     lastPrint = millis();
     Serial.print("HB CDONE=");
-    Serial.println(digitalRead(PIN_FPGA_CDONE));
+    Serial.print(digitalRead(PIN_FPGA_CDONE));
+    Serial.print(", CRESETN=");
+    Serial.print(digitalRead(PIN_FPGA_CRESETN));
+    Serial.print(", SSN=");
+    Serial.print(digitalRead(PIN_ICE_SSN));
+    Serial.print(", SCK=");
+    Serial.print(digitalRead(PIN_ICE_SCK));
+    Serial.print(", SI=");
+    Serial.print(digitalRead(PIN_ICE_SI));
+    if (PIN_RAM_SS >= 0) {
+      Serial.print(", RAM_SS=");
+      Serial.print(digitalRead(PIN_RAM_SS));
+    }
+    Serial.println();
   }
   if (millis() - lastHelp > 10000) {
     lastHelp = millis();
@@ -450,6 +482,6 @@ void loop() {
 #if HAVE_BLINK
     Serial.print(", l=blink");
 #endif
-    Serial.println(".");
+    Serial.println(", p=program, r=reset, s=status.");
   }
 }
