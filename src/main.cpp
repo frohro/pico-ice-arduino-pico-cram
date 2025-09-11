@@ -4,7 +4,6 @@
 // For pico2-ice, uncomment the next line: #define PICO2_ICE
 
 #include <Arduino.h>
-#include <hardware/gpio.h>
 
 // Include both bitstreams; choose at runtime via serial prompt
 #include "blank_design.h"
@@ -84,15 +83,26 @@ static void bb_write(const uint8_t* data, size_t len) {
   }
 }
 
+// Initialize FPGA clock and CRESET pin (equivalent to pico-ice-sdk ice_fpga_init + ice_fpga_start)
+static void init_fpga() {
+  // Start FPGA clock (equivalent to ice_fpga_init)
+  if (!g_clk_running) start_fpga_clock();
+  
+  // Initialize CRESET pin and ensure FPGA is in reset (equivalent to ice_fpga_init + ice_fpga_stop)
+  pinMode(PIN_FPGA_CRESETN, OUTPUT);
+  digitalWrite(PIN_FPGA_CRESETN, LOW); // Hold in reset
+  delayMicroseconds(10);
+  
+  // Release reset (equivalent to ice_fpga_start)
+  digitalWrite(PIN_FPGA_CRESETN, HIGH);
+  delayMicroseconds(10);
+}
+
 // Enter CRAM configuration mode and prepare to stream a bitstream
 static bool cram_open() {
-  // Ensure pins configured
+  // Ensure pins configured (FPGA should already be initialized by init_fpga())
   pinMode(PIN_FPGA_CRESETN, OUTPUT);
-  // Initialize CDONE pin properly like pico-ice-sdk (no pull resistors, high impedance)
-  gpio_init(PIN_FPGA_CDONE);
-  gpio_disable_pulls(PIN_FPGA_CDONE);
-  gpio_put(PIN_FPGA_CDONE, false);
-  gpio_set_dir(PIN_FPGA_CDONE, GPIO_IN);
+  pinMode(PIN_FPGA_CDONE, INPUT);
   pinMode(PIN_ICE_SSN, OUTPUT);
   // Configure bit-bang pins
   pinMode(PIN_ICE_SCK, OUTPUT);
@@ -104,25 +114,14 @@ static bool cram_open() {
     pinMode(PIN_RAM_SS, INPUT_PULLDOWN);
   }
 
-  // Hold FPGA in reset (active low)
-  digitalWrite(PIN_FPGA_CRESETN, LOW);
-
-  // Initialize clock idle low, data default low
-  sck_low();
-  si_write(0);
-
-  // Ensure external FPGA clock is running before releasing reset
+  // FPGA should already be initialized and out of reset from init_fpga()
+  // Just ensure clock is running
   if (!g_clk_running) start_fpga_clock();
-  delayMicroseconds(10);
 
   // Select CRAM target (active low)
   digitalWrite(PIN_ICE_SSN, LOW);
 
-  // After at least 200ns, release reset
-  delayMicroseconds(2);
-  digitalWrite(PIN_FPGA_CRESETN, HIGH);
-
-  // Wait at least 1200us for internal config memory clear
+  // Wait at least 1200us for internal config memory clear (FPGA should already be out of reset)
   delayMicroseconds(1300);
 
   // Per datasheet: SS high for 8 SCLKs before bitstream
@@ -155,7 +154,7 @@ static bool cram_close() {
   for (int i = 0; i < 13 && !done; ++i) {
     for (int bit = 0; bit < 8; ++bit) {
       sck_high(); sck_low();
-      if (!done && gpio_get(PIN_FPGA_CDONE)) {
+      if (!done && digitalRead(PIN_FPGA_CDONE)) {
         done = true;
         clocks_until_done = i * 8 + bit + 1;
         break;
@@ -229,6 +228,10 @@ static void release_led_pins() {
 // Full FPGA configuration sequence using the selected bitstream
 static bool configure_fpga(BitstreamSel bs) {
   Serial.print("Bitstream: "); Serial.println(bs.name);
+  
+  // Initialize FPGA (equivalent to pico-ice-sdk ice_fpga_init + ice_fpga_start)
+  init_fpga();
+  
   Serial.println("FPGA CRAM: open");
   bool ok = cram_open();
   if (!ok) { Serial.println("open failed"); indicateStatus(false); return false; }
@@ -294,7 +297,7 @@ void loop() {
   if (millis() - lastPrint > 2000) {
     lastPrint = millis();
     Serial.print("HB CDONE=");
-    Serial.println(gpio_get(PIN_FPGA_CDONE));
+    Serial.println(digitalRead(PIN_FPGA_CDONE));
   }
   if (millis() - lastHelp > 10000) {
     lastHelp = millis();
