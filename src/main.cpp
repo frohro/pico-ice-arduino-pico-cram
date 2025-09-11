@@ -161,9 +161,18 @@ static void syscfg_pio_begin(uint pin_mosi, uint pin_sck, uint32_t sck_hz) {
 
 // Send a byte buffer via PIO TX (blocking). Assumes SS already asserted.
 static void syscfg_pio_tx(const uint8_t* data, size_t len) {
+  Serial.print("SPI TX: sending ");
+  Serial.print(len);
+  Serial.println(" bytes");
   for (size_t i = 0; i < len; ++i) {
     // Align byte to MSB so MSB-first shifting outputs correct order
     pio_sm_put_blocking(g_pio, g_sm, ((uint32_t)data[i]) << 24);
+    if (i < 10) { // Debug first 10 bytes
+      Serial.print("Byte ");
+      Serial.print(i);
+      Serial.print(": 0x");
+      Serial.println(data[i], HEX);
+    }
   }
   // Wait for FIFO to drain
   while (!pio_sm_is_tx_fifo_empty(g_pio, g_sm)) { /* wait */ }
@@ -186,6 +195,8 @@ static void syscfg_pio_end(uint pin_mosi, uint pin_sck) {
 
 // Enter CRAM configuration mode and prepare to stream a bitstream
 static bool cram_open() {
+  Serial.println("CRAM open: starting FPGA configuration sequence");
+
   // Ensure pins configured
   pinMode(PIN_FPGA_CRESETN, OUTPUT);
   pinMode(PIN_FPGA_CDONE, INPUT);
@@ -201,6 +212,7 @@ static bool cram_open() {
   }
 
   // Hold FPGA in reset (active low)
+  Serial.println("Setting CRESETN LOW (FPGA in reset)");
   digitalWrite(PIN_FPGA_CRESETN, LOW);
 
   // Initialize clock idle low, data default low
@@ -212,20 +224,25 @@ static bool cram_open() {
   delayMicroseconds(10);
 
   // Select CRAM target (active low)
+  Serial.println("Setting SSN LOW (select CRAM)");
   digitalWrite(PIN_ICE_SSN, LOW);
 
   // After at least 200ns, release reset
   delayMicroseconds(2);
+  Serial.println("Setting CRESETN HIGH (FPGA out of reset)");
   digitalWrite(PIN_FPGA_CRESETN, HIGH);
 
   // Wait at least 1200us for internal config memory clear
+  Serial.println("Waiting 1300us for FPGA internal memory clear");
   delayMicroseconds(1300);
 
   // Per datasheet: SS high for 8 SCLKs before bitstream
+  Serial.println("Sending 8 dummy clocks with SSN HIGH");
   digitalWrite(PIN_ICE_SSN, HIGH);
   clocks(8);
   digitalWrite(PIN_ICE_SSN, LOW);
 
+  Serial.println("CRAM open: ready for bitstream");
   return true;
 }
 
@@ -254,6 +271,10 @@ static bool cram_write(const uint8_t* data, size_t len) {
 
 // Finalize configuration and confirm CDONE goes high within spec
 static bool cram_close() {
+  Serial.println("CRAM close: starting CDONE detection");
+  Serial.print("CDONE pin state before SS deassert: ");
+  Serial.println(digitalRead(PIN_FPGA_CDONE));
+
   // Deassert SS and emulate SDK behavior: leave it pulled up and Hi-Z
   digitalWrite(PIN_ICE_SSN, HIGH);
   delayMicroseconds(1);
@@ -269,13 +290,23 @@ static bool cram_close() {
   si_write(0);
   bool done = false;
   int clocks_until_done = -1;
+  Serial.println("Sending dummy clocks, monitoring CDONE...");
   for (int i = 0; i < 13 && !done; ++i) {
     for (int bit = 0; bit < 8; ++bit) {
       sck_high(); sck_low();
-      if (!done && digitalRead(PIN_FPGA_CDONE)) {
+      bool cdone_state = digitalRead(PIN_FPGA_CDONE);
+      if (!done && cdone_state) {
         done = true;
         clocks_until_done = i * 8 + bit + 1;
+        Serial.print("CDONE went HIGH at clock ");
+        Serial.println(clocks_until_done);
         break;
+      }
+      if (bit == 0 && i < 5) { // Debug first few bytes
+        Serial.print("Clock ");
+        Serial.print(i * 8 + bit + 1);
+        Serial.print(": CDONE=");
+        Serial.println(cdone_state);
       }
     }
   }
