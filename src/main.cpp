@@ -78,8 +78,8 @@ static constexpr uint32_t FPGA_CLK_FREQ = 12000000; // 12 MHz
 // This avoids fractional divider jitter.
 // static constexpr uint32_t FPGA_CLK_PIO_HZ = 48000000; // desired PIO clock to FPGA
 
-// Target SPI SCK for CRAM programming (~20 MHz)
-static constexpr uint32_t CRAM_SPI_HZ = 20000000;
+// Target SPI SCK for CRAM programming (~1 MHz, matching pico-ice-sdk)
+static constexpr uint32_t CRAM_SPI_HZ = 1000000;
 
 // Helpers for active-low LEDs
 static inline void ledOn(uint8_t pin) { pinMode(pin, OUTPUT); digitalWrite(pin, LOW); }
@@ -98,30 +98,14 @@ static void start_fpga_clock() {
     return;
   }
   Serial.println("Starting FPGA clock...");
-#if USE_PIO_CLK
-  // Use PIO1 for the clock to avoid contention with PIO0 used for SPI
-  PIO pio = pio1;
-  int sm = pio_claim_unused_sm(pio, true);
-  uint off = pio_add_program(pio, &clk_out_program);
-  pio_gpio_init(pio, PIN_CLOCK);
-  pio_sm_config c = clk_out_program_get_default_config(off);
-  sm_config_set_sideset_pins(&c, PIN_CLOCK);
-  // clkdiv = 1.0 => f_out = clk_sys / 3 (from 3 instructions in the loop)
-  sm_config_set_clkdiv(&c, 1.0f);
-  pio_sm_init(pio, sm, off, &c);
-  pio_sm_set_consecutive_pindirs(pio, sm, PIN_CLOCK, 1, true);
-  pio_sm_set_enabled(pio, sm, true);
+  
+  // Use the RP2350's dedicated clock output for accurate timing
+  // This is the same method used by the pico-ice-sdk
+  uint src = CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_VALUE_CLK_USB; // 48 MHz USB clock
+  clock_gpio_init(PIN_CLOCK, src, 4); // 48 MHz / 4 = 12 MHz
+  
   g_clk_running = true;
-  Serial.println("FPGA clock started (PIO)");
-#else
-  pinMode(PIN_CLOCK, OUTPUT);
-  analogWriteRange(2);
-  analogWriteFreq(FPGA_CLK_FREQ);
-  analogWrite(PIN_CLOCK, 1); // 50% duty (1/2)
-  delayMicroseconds(10);
-  g_clk_running = true;
-  Serial.println("FPGA clock started (PWM)");
-#endif
+  Serial.println("FPGA clock started (CLK_GPOUT0)");
 }
 
 // Generate N dummy SCLK cycles with SCK while SS is in its current state
@@ -225,9 +209,10 @@ static bool cram_open() {
   Serial.print(digitalRead(PIN_ICE_SSN));
   Serial.println();
 
-  // Hold FPGA in reset (active low)
+  // Hold FPGA in reset (active low) - ensure it's properly initialized
   Serial.println("Setting CRESETN LOW (FPGA in reset)");
   digitalWrite(PIN_FPGA_CRESETN, LOW);
+  delayMicroseconds(10); // Ensure reset is stable
 
   // Initialize clock idle low, data default low
   sck_low();
