@@ -35,11 +35,11 @@ For pico2-ice (RP2350):
 - GPIO7  = PIN_ICE_SO  (ICE_SO, FPGA ➜ RP2350)
 - GPIO6  = PIN_ICE_SCK (ICE_SCK)
 - GPIO5  = PIN_ICE_SSN (sysCONFIG SS, active-low)
-- GPIO8  = PIN_RAM_SS  (External PSRAM SS)
 - GPIO31 = PIN_FPGA_CRESETN (CRESET_B, active-low)
-- GPIO26 = PIN_FPGA_CDONE (CDONE)
+- GPIO40 = PIN_FPGA_CDONE (CDONE) - **Corrected from pico-ice-sdk**
 - GPIO21 = PIN_CLOCK (clock to FPGA)
 - GPIO1/0/9 = LED_R/G/B (active-low)
+- No external PSRAM (PIN_RAM_SS = -1)
 
 ## Board Selection
 To select the board, choose the appropriate PlatformIO environment:
