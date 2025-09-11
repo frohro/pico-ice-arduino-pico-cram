@@ -4,6 +4,7 @@
 // For pico2-ice, uncomment the next line: #define PICO2_ICE
 
 #include <Arduino.h>
+#include <hardware/gpio.h>
 
 // Include both bitstreams; choose at runtime via serial prompt
 #include "blank_design.h"
@@ -87,7 +88,11 @@ static void bb_write(const uint8_t* data, size_t len) {
 static bool cram_open() {
   // Ensure pins configured
   pinMode(PIN_FPGA_CRESETN, OUTPUT);
-  pinMode(PIN_FPGA_CDONE, INPUT);
+  // Initialize CDONE pin properly like pico-ice-sdk (no pull resistors, high impedance)
+  gpio_init(PIN_FPGA_CDONE);
+  gpio_disable_pulls(PIN_FPGA_CDONE);
+  gpio_put(PIN_FPGA_CDONE, false);
+  gpio_set_dir(PIN_FPGA_CDONE, GPIO_IN);
   pinMode(PIN_ICE_SSN, OUTPUT);
   // Configure bit-bang pins
   pinMode(PIN_ICE_SCK, OUTPUT);
@@ -150,7 +155,7 @@ static bool cram_close() {
   for (int i = 0; i < 13 && !done; ++i) {
     for (int bit = 0; bit < 8; ++bit) {
       sck_high(); sck_low();
-      if (!done && digitalRead(PIN_FPGA_CDONE)) {
+      if (!done && gpio_get(PIN_FPGA_CDONE)) {
         done = true;
         clocks_until_done = i * 8 + bit + 1;
         break;
@@ -289,7 +294,7 @@ void loop() {
   if (millis() - lastPrint > 2000) {
     lastPrint = millis();
     Serial.print("HB CDONE=");
-    Serial.println(digitalRead(PIN_FPGA_CDONE));
+    Serial.println(gpio_get(PIN_FPGA_CDONE));
   }
   if (millis() - lastHelp > 10000) {
     lastHelp = millis();
