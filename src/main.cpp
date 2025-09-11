@@ -22,9 +22,9 @@ static constexpr uint8_t PIN_ICE_SI     = 4;   // ICE_SI (MOSI from RP2350 to FP
 static constexpr uint8_t PIN_ICE_SO     = 7;   // ICE_SO (MISO from FPGA to RP2350)
 static constexpr uint8_t PIN_ICE_SCK    = 6;   // ICE_SCK
 static constexpr uint8_t PIN_ICE_SSN    = 5;   // ICE_SSN (FPGA sysCONFIG SS, active low)
-static constexpr uint8_t PIN_RAM_SS     = 8;   // External PSRAM SS (keep deasserted)
-static constexpr uint8_t PIN_FPGA_CRESETN = 31; // FPGA CRESET_B (active low)
-static constexpr uint8_t PIN_FPGA_CDONE  = 26; // FPGA CDONE
+static constexpr uint8_t PIN_RAM_SS     = -1;  // No external PSRAM on pico2-ice
+static constexpr uint8_t PIN_FPGA_CRESETN = 31; // FPGA CRESET_B (active low) - correct per pico-ice-sdk
+static constexpr uint8_t PIN_FPGA_CDONE  = 40; // FPGA CDONE - correct per pico-ice-sdk
 static constexpr uint8_t PIN_LED_R       = 1;  // Active-low
 static constexpr uint8_t PIN_LED_G       = 0;  // Active-low
 static constexpr uint8_t PIN_LED_B       = 9;  // Active-low
@@ -94,7 +94,10 @@ static bool cram_open() {
   pinMode(PIN_ICE_SI, OUTPUT); // drive FPGA SI via GPIO8
   // PSRAM SS is active-high via CMOS inverter; board has 10k pulldown on SRAM_SS
   // Tri-state with pulldown so the line stays low (deasserted) without active drive
-  pinMode(PIN_RAM_SS, INPUT_PULLDOWN);
+  // Only configure PSRAM SS pin if it exists (not on pico2-ice)
+  if (PIN_RAM_SS >= 0) {
+    pinMode(PIN_RAM_SS, INPUT_PULLDOWN);
+  }
 
   // Hold FPGA in reset (active low)
   digitalWrite(PIN_FPGA_CRESETN, LOW);
