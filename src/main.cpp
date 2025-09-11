@@ -52,8 +52,8 @@ static constexpr int8_t PIN_ICE_SO     = 7;   // ICE_SO (MISO from FPGA to RP235
 static constexpr int8_t PIN_ICE_SCK    = 6;   // ICE_SCK
 static constexpr int8_t PIN_ICE_SSN    = 5;   // ICE_SSN (FPGA sysCONFIG SS, active low)
 static constexpr int8_t PIN_RAM_SS     = -1;  // No external PSRAM on pico2-ice
-static constexpr int8_t PIN_FPGA_CRESETN = 31; // FPGA CRESET_B (active low)
-static constexpr int8_t PIN_FPGA_CDONE  = 40; // FPGA CDONE (corrected from pico-ice-sdk)
+static constexpr int8_t PIN_FPGA_CRESETN = 27; // FPGA CRESET_B (active low) - corrected
+static constexpr int8_t PIN_FPGA_CDONE  = 26; // FPGA CDONE - corrected
 static constexpr int8_t PIN_LED_R       = 1;  // Active-low
 static constexpr int8_t PIN_LED_G       = 0;  // Active-low
 static constexpr int8_t PIN_LED_B       = 9;  // Active-low
@@ -93,8 +93,12 @@ static inline void si_write(bool v) { digitalWrite(PIN_ICE_SI, v ? HIGH : LOW); 
 // Manage the external FPGA clock. Safe to call repeatedly; re-applies settings.
 static bool g_clk_running = false;
 static void start_fpga_clock() {
+  if (g_clk_running) {
+    Serial.println("FPGA clock already running");
+    return;
+  }
+  Serial.println("Starting FPGA clock...");
 #if USE_PIO_CLK
-  if (g_clk_running) return;
   // Use PIO1 for the clock to avoid contention with PIO0 used for SPI
   PIO pio = pio1;
   int sm = pio_claim_unused_sm(pio, true);
@@ -108,6 +112,7 @@ static void start_fpga_clock() {
   pio_sm_set_consecutive_pindirs(pio, sm, PIN_CLOCK, 1, true);
   pio_sm_set_enabled(pio, sm, true);
   g_clk_running = true;
+  Serial.println("FPGA clock started (PIO)");
 #else
   pinMode(PIN_CLOCK, OUTPUT);
   analogWriteRange(2);
@@ -115,6 +120,7 @@ static void start_fpga_clock() {
   analogWrite(PIN_CLOCK, 1); // 50% duty (1/2)
   delayMicroseconds(10);
   g_clk_running = true;
+  Serial.println("FPGA clock started (PWM)");
 #endif
 }
 
@@ -210,6 +216,14 @@ static bool cram_open() {
   if (PIN_RAM_SS >= 0) {
     pinMode(PIN_RAM_SS, INPUT_PULLDOWN);
   }
+
+  Serial.print("Pin states before config: CRESETN=");
+  Serial.print(digitalRead(PIN_FPGA_CRESETN));
+  Serial.print(", CDONE=");
+  Serial.print(digitalRead(PIN_FPGA_CDONE));
+  Serial.print(", SSN=");
+  Serial.print(digitalRead(PIN_ICE_SSN));
+  Serial.println();
 
   // Hold FPGA in reset (active low)
   Serial.println("Setting CRESETN LOW (FPGA in reset)");
