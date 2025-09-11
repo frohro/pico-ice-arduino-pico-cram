@@ -48,6 +48,11 @@ To select the board, choose the appropriate PlatformIO environment:
 
 The environment automatically sets the correct define (`PICO2_ICE` for pico2-ice) in the build flags, so no manual code changes are needed.
 
+**Note**: RP2350 support requires the maxgerhardt platform. If you encounter issues, update the platform with:
+```bash
+pio platform update https://github.com/maxgerhardt/platform-raspberrypi.git
+```
+
 ## Prerequisites
 - PlatformIO (VS Code extension or CLI)
 - A pico-ice or pico2-ice board connected via USB
