@@ -35,8 +35,8 @@ For pico2-ice (RP2350):
 - GPIO7  = PIN_ICE_SO  (ICE_SO, FPGA ➜ RP2350)
 - GPIO6  = PIN_ICE_SCK (ICE_SCK)
 - GPIO5  = PIN_ICE_SSN (sysCONFIG SS, active-low)
-- GPIO27 = PIN_FPGA_CRESETN (CRESET_B, active-low) - **Corrected per schematic**
-- GPIO26 = PIN_FPGA_CDONE (CDONE) - **Corrected per schematic**
+- GPIO31 = PIN_FPGA_CRESETN (CRESET_B, active-low) - **Correct per pico-ice-sdk**
+- GPIO40 = PIN_FPGA_CDONE (CDONE) - **Correct per pico-ice-sdk**
 - GPIO21 = PIN_CLOCK (clock to FPGA)
 - GPIO1/0/9 = LED_R/G/B (active-low)
 - No external PSRAM (PIN_RAM_SS = -1)
