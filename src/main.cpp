@@ -5,6 +5,8 @@
 
 #include <Arduino.h>
 #include "hardware/gpio.h" // Added for gpio_set_function
+#include "hardware/pwm.h"  // Added for precise PWM control
+#include "hardware/clocks.h" // Added for clock frequency
 
 // Include both bitstreams; choose at runtime via serial prompt
 #include "blank_design.h"
@@ -58,12 +60,62 @@ static inline void si_write(bool v) { digitalWrite(PIN_ICE_SI, v ? HIGH : LOW); 
 // Manage the external FPGA clock. Safe to call repeatedly; re-applies settings.
 static bool g_clk_running = false;
 static void start_fpga_clock() {
-  pinMode(PIN_CLOCK, OUTPUT);
-  analogWriteRange(2);
-  analogWriteFreq(FPGA_CLK_FREQ);
-  analogWrite(PIN_CLOCK, 1); // 50% duty (1/2)
+  // Set pin to PWM function
+  gpio_set_function(PIN_CLOCK, GPIO_FUNC_PWM);
+  
+  // Get PWM slice for this pin
+  uint slice_num = pwm_gpio_to_slice_num(PIN_CLOCK);
+  
+  // Calculate clock divider for desired frequency
+  // PWM freq = sys_clk / ((wrap + 1) * div)
+  // For 12 MHz with system clock typically 125 MHz:
+  // div = 125MHz / (12MHz * (wrap + 1))
+  // Using wrap = 9 (10 counts): div = 125/120 = 1.042
+  // Using integer divider of 1 and wrap of 9: actual freq = 125/(1*10) = 12.5 MHz
+  // Using wrap = 10 (11 counts): div = 125/132 = 0.947, but min div is 1
+  // Better: wrap = 4 (5 counts), div = 125/60 = 2.083 -> use div = 2, gives 125/10 = 12.5 MHz
+  // Even better: wrap = 9, div = 1.042 -> use fractional divider
+  
+  uint32_t sys_clk = clock_get_hz(clk_sys);
+  float divider = (float)sys_clk / (float)(FPGA_CLK_FREQ * 10); // 10 counts for 50% duty
+  
+  // Configure PWM
+  pwm_config config = pwm_get_default_config();
+  pwm_config_set_clkdiv(&config, divider);
+  pwm_config_set_wrap(&config, 9); // 10 counts (0-9) for 50% duty cycle
+  
+  // Initialize PWM
+  pwm_init(slice_num, &config, false);
+  
+  // Set duty cycle to 50% (5 out of 10 counts)
+  pwm_set_gpio_level(PIN_CLOCK, 5);
+  
+  // Enable PWM
+  pwm_set_enabled(slice_num, true);
+  
   delayMicroseconds(10); // allow PWM to settle
   g_clk_running = true;
+  
+  // Debug: Calculate and print actual frequency
+  float actual_freq = (float)sys_clk / (divider * 10.0);
+  Serial.print("FPGA Clock: Target=");
+  Serial.print(FPGA_CLK_FREQ / 1000000.0, 1);
+  Serial.print(" MHz, Actual=");
+  Serial.print(actual_freq / 1000000.0, 2);
+  Serial.print(" MHz, Divider=");
+  Serial.println(divider, 3);
+}
+
+// Stop the FPGA clock
+static void stop_fpga_clock() {
+  if (g_clk_running) {
+    uint slice_num = pwm_gpio_to_slice_num(PIN_CLOCK);
+    pwm_set_enabled(slice_num, false);
+    gpio_set_function(PIN_CLOCK, GPIO_FUNC_SIO);
+    pinMode(PIN_CLOCK, OUTPUT);
+    digitalWrite(PIN_CLOCK, LOW);
+    g_clk_running = false;
+  }
 }
 
 // Generate N dummy SCLK cycles with SCK while SS is in its current state
