@@ -4,6 +4,7 @@
 // For pico2-ice, uncomment the next line: #define PICO2_ICE
 
 #include <Arduino.h>
+#include "hardware/gpio.h" // Added for gpio_set_function
 
 // Include both bitstreams; choose at runtime via serial prompt
 #include "blank_design.h"
@@ -22,29 +23,28 @@ static constexpr uint8_t PIN_ICE_SI     = 4;   // ICE_SI (MOSI from RP2350 to FP
 static constexpr uint8_t PIN_ICE_SO     = 7;   // ICE_SO (MISO from FPGA to RP2350)
 static constexpr uint8_t PIN_ICE_SCK    = 6;   // ICE_SCK
 static constexpr uint8_t PIN_ICE_SSN    = 5;   // ICE_SSN (FPGA sysCONFIG SS, active low)
-static constexpr uint8_t PIN_RAM_SS     = -1;  // No external PSRAM on pico2-ice
-static constexpr uint8_t PIN_FPGA_CRESETN = 31; // FPGA CRESET_B (active low) - correct per pico-ice-sdk
-static constexpr uint8_t PIN_FPGA_CDONE  = 40; // FPGA CDONE - correct per pico-ice-sdk
-static constexpr uint8_t PIN_LED_R       = 1;  // Active-low
-static constexpr uint8_t PIN_LED_G       = 0;  // Active-low
-static constexpr uint8_t PIN_LED_B       = 9;  // Active-low
-static constexpr uint8_t PIN_CLOCK       = 21; // External clock to FPGA (ICE_CLK)
+static constexpr uint8_t PIN_LED_R      = 1;   // Active-low
+static constexpr uint8_t PIN_LED_G      = 0;   // Active-low
+static constexpr uint8_t PIN_LED_B      = 9;   // Active-low
+static constexpr uint8_t PIN_FPGA_CRESETN = 31; // FPGA CRESET_B (active low)
+static constexpr uint8_t PIN_FPGA_CDONE = 40;  // FPGA CDONE
+static constexpr uint8_t PIN_CLOCK      = 21;  // External clock to FPGA (ICE_CLK)
 #else
 static constexpr uint8_t PIN_ICE_SI     = 8;   // ICE_SI (MOSI from RP2040 to FPGA)
 static constexpr uint8_t PIN_ICE_SO     = 11;  // ICE_SO (MISO from FPGA to RP2040)
 static constexpr uint8_t PIN_ICE_SCK    = 10;  // ICE_SCK
 static constexpr uint8_t PIN_ICE_SSN    = 9;   // ICE_SSN (FPGA sysCONFIG SS, active low)
-static constexpr uint8_t PIN_RAM_SS     = 14;  // External PSRAM SS (keep deasserted)
+static constexpr uint8_t PIN_LED_R      = 13;  // Active-low
+static constexpr uint8_t PIN_LED_G      = 12;  // Active-low
+static constexpr uint8_t PIN_LED_B      = 15;  // Active-low
 static constexpr uint8_t PIN_FPGA_CRESETN = 27; // FPGA CRESET_B (active low)
-static constexpr uint8_t PIN_FPGA_CDONE  = 26; // FPGA CDONE
-static constexpr uint8_t PIN_LED_R       = 13; // Active-low
-static constexpr uint8_t PIN_LED_G       = 12; // Active-low
-static constexpr uint8_t PIN_LED_B       = 15; // Active-low
-static constexpr uint8_t PIN_CLOCK       = 24; // External clock to FPGA (ICE_CLK)
+static constexpr uint8_t PIN_FPGA_CDONE = 26;  // FPGA CDONE
+static constexpr uint8_t PIN_CLOCK      = 24;  // External clock to FPGA (ICE_CLK)
 #endif
+static constexpr uint8_t PIN_RAM_SS     = 14;  // External PSRAM SS (keep deasserted) - N/A on pico2-ice
 
 // External clock frequency for FPGA user logic
-static constexpr uint32_t FPGA_CLK_FREQ = 12000000; // 12 MHz
+static constexpr uint32_t FPGA_CLK_FREQ = 10000000; // 10 MHz
 
 // Helpers for active-low LEDs
 static inline void ledOn(uint8_t pin) { pinMode(pin, OUTPUT); digitalWrite(pin, LOW); }
@@ -100,7 +100,12 @@ static void init_fpga() {
 
 // Enter CRAM configuration mode and prepare to stream a bitstream
 static bool cram_open() {
+<<<<<<< Updated upstream
   // Ensure pins configured (FPGA should already be initialized by init_fpga())
+=======
+  // Ensure pins configured
+  gpio_set_function(PIN_FPGA_CRESETN, GPIO_FUNC_SIO); // Force SIO function
+>>>>>>> Stashed changes
   pinMode(PIN_FPGA_CRESETN, OUTPUT);
   pinMode(PIN_FPGA_CDONE, INPUT);
   pinMode(PIN_ICE_SSN, OUTPUT);
