@@ -100,12 +100,8 @@ static void init_fpga() {
 
 // Enter CRAM configuration mode and prepare to stream a bitstream
 static bool cram_open() {
-<<<<<<< Updated upstream
-  // Ensure pins configured (FPGA should already be initialized by init_fpga())
-=======
   // Ensure pins configured
   gpio_set_function(PIN_FPGA_CRESETN, GPIO_FUNC_SIO); // Force SIO function
->>>>>>> Stashed changes
   pinMode(PIN_FPGA_CRESETN, OUTPUT);
   pinMode(PIN_FPGA_CDONE, INPUT);
   pinMode(PIN_ICE_SSN, OUTPUT);
@@ -114,19 +110,30 @@ static bool cram_open() {
   pinMode(PIN_ICE_SI, OUTPUT); // drive FPGA SI via GPIO8
   // PSRAM SS is active-high via CMOS inverter; board has 10k pulldown on SRAM_SS
   // Tri-state with pulldown so the line stays low (deasserted) without active drive
-  // Only configure PSRAM SS pin if it exists (not on pico2-ice)
-  if (PIN_RAM_SS >= 0) {
-    pinMode(PIN_RAM_SS, INPUT_PULLDOWN);
-  }
+#ifndef PICO2_ICE
+  pinMode(PIN_RAM_SS, INPUT_PULLDOWN);
+#endif
 
-  // FPGA should already be initialized and out of reset from init_fpga()
-  // Just ensure clock is running
+  // Hold FPGA in reset (active low)
+  digitalWrite(PIN_FPGA_CRESETN, LOW);
+
+  // Initialize clock idle low, data default low
+  sck_low();
+  si_write(0);
+
+  // Ensure external FPGA clock is running before releasing reset
   if (!g_clk_running) start_fpga_clock();
+  delayMicroseconds(10);
 
   // Select CRAM target (active low)
   digitalWrite(PIN_ICE_SSN, LOW);
 
-  // Wait at least 1200us for internal config memory clear (FPGA should already be out of reset)
+  // After at least 200ns, release reset
+  delayMicroseconds(2);
+  digitalWrite(PIN_FPGA_CRESETN, HIGH);
+
+  // Wait at least 1200us for internal config memory clear
+  delayMicroseconds(1300);
   delayMicroseconds(1300);
 
   // Per datasheet: SS high for 8 SCLKs before bitstream
