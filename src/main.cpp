@@ -44,7 +44,7 @@ static constexpr uint8_t PIN_CLOCK      = 24;  // External clock to FPGA (ICE_CL
 static constexpr uint8_t PIN_RAM_SS     = 14;  // External PSRAM SS (keep deasserted) - N/A on pico2-ice
 
 // External clock frequency for FPGA user logic
-static constexpr uint32_t FPGA_CLK_FREQ = 10000000; // 10 MHz
+static constexpr uint32_t FPGA_CLK_FREQ = 12000000; // 12 MHz
 
 // Helpers for active-low LEDs
 static inline void ledOn(uint8_t pin) { pinMode(pin, OUTPUT); digitalWrite(pin, LOW); }
