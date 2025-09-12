@@ -1,0 +1,32 @@
+; PIO program to generate a precise 12 MHz clock
+; This generates a square wave with 50% duty cycle
+
+.program clock_gen
+.side_set 1 opt
+
+; Generate square wave by toggling the side-set pin
+loop:
+    nop side 1  ; Set pin high
+    nop side 0  ; Set pin low
+    jmp loop    ; Repeat forever
+
+% c-sdk {
+static inline void clock_gen_program_init(PIO pio, uint sm, uint offset, uint pin, float freq) {
+    pio_gpio_init(pio, pin);
+    pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, true);
+    
+    pio_sm_config c = clock_gen_get_default_config(offset);
+    sm_config_set_sideset_pins(&c, pin);
+    
+    // Calculate clock divider for target frequency
+    // PIO clock = sys_clk / div
+    // We want 2 cycles per output period (nop side 1, nop side 0)
+    // So output freq = sys_clk / (div * 2)
+    // Therefore: div = sys_clk / (freq * 2)
+    float div = (float)clock_get_hz(clk_sys) / (freq * 2.0f);
+    sm_config_set_clkdiv(&c, div);
+    
+    pio_sm_init(pio, sm, offset, &c);
+    pio_sm_set_enabled(pio, sm, true);
+}
+%}

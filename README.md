@@ -1,4 +1,14 @@
-# pico-ice / pico2-ice Arduino-Pico CRAM Programmer (PlatformIO)
+# pico-i## Features
+- Load FPGA bitstreams directly from flash (compiled headers)
+- Runtime selection via Serial: blank, traffic light controller, and optional blink
+- FPGA clock on GPIO24 (pico-ice) / GPIO21 (pico2-ice)
+  - main: PWM at 10 MHz (configurable via `FPGA_CLK_FREQ`)
+  - PIO: Precise PIO-generated clock at 12 MHz with jitter-free output
+- SPI for CRAM
+  - main: bit-banged
+  - PIO: Hardware-accelerated SPI using PIO for faster and more reliable configuration
+- Clean, minimal Arduino-based implementation (no Pico SDK build needed)
+- Supports both pico-ice (RP2040) and pico2-ice (RP2350) with pin adjustmentsice Arduino-Pico CRAM Programmer (PlatformIO)
 
 This project programs the iCE40UP5K FPGA on the pico-ice (RP2040) or pico2-ice (RP2350) board using the Arduino-Pico core (Earle Philhower). It mirrors the pico-ice-sdk CRAM sequence and checks CDONE to confirm configuration. No post-load verification is performed; the sysCONFIG bus is released after configuration.
 

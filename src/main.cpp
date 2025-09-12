@@ -92,6 +92,10 @@ static inline void si_write(bool v) { digitalWrite(PIN_ICE_SI, v ? HIGH : LOW); 
 
 // Manage the external FPGA clock. Safe to call repeatedly; re-applies settings.
 static bool g_clk_running = false;
+static PIO g_clk_pio = pio1;  // Use PIO1 for clock generation 
+static int g_clk_sm = -1;
+static uint g_clk_off = 0;
+
 static void start_fpga_clock() {
   if (g_clk_running) {
     Serial.println("FPGA clock already running");
@@ -99,13 +103,47 @@ static void start_fpga_clock() {
   }
   Serial.println("Starting FPGA clock...");
   
-  // Use the RP2350's dedicated clock output for accurate timing
-  // This is the same method used by the pico-ice-sdk
+#if USE_PIO_CLK
+  // Use PIO for precise 12 MHz clock generation
+  if (g_clk_sm < 0) {
+    g_clk_off = pio_add_program(g_clk_pio, &clk_out_program);
+    g_clk_sm = pio_claim_unused_sm(g_clk_pio, true);
+    
+    pio_gpio_init(g_clk_pio, PIN_CLOCK);
+    pio_sm_set_consecutive_pindirs(g_clk_pio, g_clk_sm, PIN_CLOCK, 1, true);
+    
+    pio_sm_config c = clk_out_program_get_default_config(g_clk_off);
+    sm_config_set_sideset_pins(&c, PIN_CLOCK);
+    
+    // Calculate divider for 12 MHz target frequency
+    // PIO clock freq = clk_sys / (3 * clkdiv) from clk_out.pio
+    // Therefore: clkdiv = clk_sys / (3 * target_freq)
+    uint32_t sys_clk = clock_get_hz(clk_sys);
+    float clkdiv = (float)sys_clk / (3.0f * (float)FPGA_CLK_FREQ);
+    sm_config_set_clkdiv(&c, clkdiv);
+    
+    pio_sm_init(g_clk_pio, g_clk_sm, g_clk_off, &c);
+    pio_sm_set_enabled(g_clk_pio, g_clk_sm, true);
+    
+    float actual_freq = (float)sys_clk / (3.0f * clkdiv);
+    Serial.print("FPGA PIO Clock: Target=");
+    Serial.print(FPGA_CLK_FREQ / 1000000.0, 1);
+    Serial.print(" MHz, Actual=");
+    Serial.print(actual_freq / 1000000.0, 3);
+    Serial.print(" MHz (sys_clk=");
+    Serial.print(sys_clk / 1000000.0, 1);
+    Serial.print(" MHz, clkdiv=");
+    Serial.print(clkdiv, 3);
+    Serial.println(")");
+  }
+#else
+  // Fallback to hardware clock output (RP2350 only)
   uint src = CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_VALUE_CLK_USB; // 48 MHz USB clock
   clock_gpio_init(PIN_CLOCK, src, 4); // 48 MHz / 4 = 12 MHz
+  Serial.println("FPGA clock started (CLK_GPOUT0)");
+#endif
   
   g_clk_running = true;
-  Serial.println("FPGA clock started (CLK_GPOUT0)");
 }
 
 // Generate N dummy SCLK cycles with SCK while SS is in its current state
