@@ -44,7 +44,7 @@ static constexpr uint8_t PIN_CLOCK      = 24;  // External clock to FPGA (ICE_CL
 static constexpr uint8_t PIN_RAM_SS     = 14;  // External PSRAM SS (keep deasserted) - N/A on pico2-ice
 
 // External clock frequency for FPGA user logic
-static constexpr uint32_t FPGA_CLK_FREQ = 10000000; // 10 MHz
+static constexpr uint32_t FPGA_CLK_FREQ = 12000000; // 12 MHz
 
 // Helpers for active-low LEDs
 static inline void ledOn(uint8_t pin) { pinMode(pin, OUTPUT); digitalWrite(pin, LOW); }
@@ -59,11 +59,17 @@ static inline void si_write(bool v) { digitalWrite(PIN_ICE_SI, v ? HIGH : LOW); 
 static bool g_clk_running = false;
 static void start_fpga_clock() {
   pinMode(PIN_CLOCK, OUTPUT);
-  analogWriteRange(2);
+  
+  // Try standard PWM setup for clean clock generation
   analogWriteFreq(FPGA_CLK_FREQ);
-  analogWrite(PIN_CLOCK, 1); // 50% duty (1/2)
-  delayMicroseconds(10); // allow PWM to settle
+  analogWriteRange(256);  // Use 8-bit range for clean edges
+  analogWrite(PIN_CLOCK, 128); // 50% duty cycle (128/256)
+  
+  delayMicroseconds(100); // allow PWM to settle
   g_clk_running = true;
+  
+  Serial.print("FPGA clock started on GPIO");
+  Serial.println(PIN_CLOCK);
 }
 
 // Generate N dummy SCLK cycles with SCK while SS is in its current state
@@ -121,8 +127,7 @@ static bool cram_open() {
   sck_low();
   si_write(0);
 
-  // Ensure external FPGA clock is running before releasing reset
-  if (!g_clk_running) start_fpga_clock();
+  // Clock should already be running from init_fpga()
   delayMicroseconds(10);
 
   // Select CRAM target (active low)
